@@ -14,7 +14,7 @@ app.get("/api", (req, res) => {
 	res.json({ message: "Hello from the server!" });
 });
 
-app.post("/signedrequest", (req, res) => {
+app.get("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
 
 	var signedrequest = decode(
@@ -23,6 +23,7 @@ app.post("/signedrequest", (req, res) => {
 	);
 
 	console.log("Decoded Signed Request: ", signedrequest);
+	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
 app.get("*", (req, res) => {
