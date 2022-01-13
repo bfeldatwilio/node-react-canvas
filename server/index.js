@@ -9,6 +9,7 @@ const app = express();
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.get("/api", (req, res) => {
+	console.log("inside the api request");
 	res.json({ message: "Hello from the server!" });
 });
 
