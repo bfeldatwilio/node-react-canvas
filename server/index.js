@@ -1,6 +1,7 @@
 const express = require("express");
 const res = require("express/lib/response");
 const path = require("path");
+signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
 const PORT = process.env.PORT || 3001;
 
@@ -11,6 +12,17 @@ app.use(express.static(path.resolve(__dirname, "../client/build")));
 app.get("/api", (req, res) => {
 	console.log("inside the api request");
 	res.json({ message: "Hello from the server!" });
+});
+
+app.post("/signedrequest", (req, res) => {
+	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
+
+	var signedrequest = decode(
+		req.body.signed_request,
+		signedRequestConsumerSecret
+	);
+
+	console.log("Decoded Signed Request: ", signedrequest);
 });
 
 app.get("*", (req, res) => {
