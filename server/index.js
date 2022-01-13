@@ -1,7 +1,7 @@
 const express = require("express");
 const res = require("express/lib/response");
 const path = require("path");
-signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
+const signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
 const PORT = process.env.PORT || 3001;
 
@@ -17,12 +17,12 @@ app.get("/api", (req, res) => {
 app.get("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
 
-	// var signedrequest = decode(
-	// 	req.body.signed_request,
-	// 	signedRequestConsumerSecret
-	// );
+	var signedrequest = decode(
+		req.body.signed_request,
+		signedRequestConsumerSecret
+	);
 
-	// console.log("Decoded Signed Request: ", signedrequest);
+	console.log("Decoded Signed Request: ", signedrequest);
 	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
