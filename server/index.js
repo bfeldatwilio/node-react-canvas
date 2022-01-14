@@ -1,7 +1,7 @@
 const express = require("express");
 const res = require("express/lib/response");
 const path = require("path");
-const decode = require("salesforece-signed-request");
+const decode = require("salesforce-signed-request");
 const jsforce = require("jsforce");
 const signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
