@@ -17,17 +17,14 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/canvasdemo", (req, res) => {
-	console.log(
-		"!!!!!!!!!!!!!!!!!!!Signed Request",
-		signedRequestConsumerSecret
-	);
+	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
+	console.log(req);
+	// var signedrequest = decode(
+	// 	req.body.signed_request,
+	// 	signedRequestConsumerSecret
+	// );
 
-	var signedrequest = decode(
-		req.body.signed_request,
-		signedRequestConsumerSecret
-	);
-
-	console.log("Decoded Signed Request: ", signedrequest);
+	// console.log("Decoded Signed Request: ", signedrequest);
 	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
