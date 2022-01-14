@@ -18,7 +18,7 @@ app.get("/api", (req, res) => {
 
 app.get("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
-	console.log(req);
+	console.log(req.body);
 	// var signedrequest = decode(
 	// 	req.body.signed_request,
 	// 	signedRequestConsumerSecret
