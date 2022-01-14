@@ -17,6 +17,7 @@ function App() {
 	};
 
 	const onclick = (e) => {
+		console.log("clicked!!!!!!!!!!!!!!!!!!!!!");
 		global.Sfdc.canvas.client.ctx(callback, client);
 	};
 
