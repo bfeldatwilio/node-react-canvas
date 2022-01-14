@@ -35,7 +35,7 @@ function App() {
 				<img src={logo} className="App-logo" alt="logo" />
 				<p>{!data ? "Loading..." : data}</p>
 			</header>
-			<button onclick={onclick}>Test</button>
+			<button onClick={onclick}>Test</button>
 		</div>
 	);
 }
