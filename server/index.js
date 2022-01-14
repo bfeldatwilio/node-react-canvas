@@ -1,6 +1,7 @@
 const express = require("express");
 const res = require("express/lib/response");
 const path = require("path");
+const decode = require("salesforece-signed-request");
 const signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
 const PORT = process.env.PORT || 3001;
