@@ -16,15 +16,14 @@ app.get("/api", (req, res) => {
 	res.json({ message: "Hello from the server!" });
 });
 
-app.get("/canvasdemo", (req, res) => {
+app.post("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
-	console.log(req.body);
-	// var signedrequest = decode(
-	// 	req.body.signed_request,
-	// 	signedRequestConsumerSecret
-	// );
+	var signedrequest = decode(
+		req.body.signed_request,
+		signedRequestConsumerSecret
+	);
 
-	// console.log("Decoded Signed Request: ", signedrequest);
+	console.log("Decoded Signed Request: ", signedrequest);
 	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
