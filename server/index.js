@@ -16,6 +16,10 @@ app.get("/api", (req, res) => {
 	res.json({ message: "Hello from the server!" });
 });
 
+app.get("/", (req, res) => {
+	res.render(path.resolve(__dirname, "../client/build", "index.html"));
+});
+
 app.post("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
 	var signedrequest = decode(
@@ -40,9 +44,9 @@ app.post("/canvasdemo", (req, res) => {
 // 	});
 // });
 
-app.get("*", (req, res) => {
-	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-});
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+// });
 
 app.listen(PORT, () => {
 	console.log("Server listening on " + PORT);
