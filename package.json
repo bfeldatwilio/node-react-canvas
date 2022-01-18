@@ -15,6 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"crypto": "^1.0.1",
 		"express": "^4.17.2",
 		"jsforce": "^1.11.0",
 		"salesforce-signed-request": "^0.0.1"
