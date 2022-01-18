@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-app.use(express.static(path.resolve(__dirname, "../client/public")));
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.get("/api", (req, res) => {
 	console.log("inside the api request");
@@ -29,7 +29,7 @@ app.get("/", function (req, res) {
 	);
 	console.log("Details: ", canvasDetails);
 	//the page knows if the user is logged into SF
-	res.render(path.resolve(__dirname, "../client/public", "index.html"));
+	res.render(path.resolve(__dirname, "../client/build", "index.html"));
 	// res.render('index',{canvasDetails : canvasDetails});
 });
 
@@ -40,7 +40,8 @@ app.post("/canvasdemo", (req, res) => {
 		function (error, canvasRequest) {
 			if (error) {
 				res.statusCode = 400;
-				return res.render("error", { error: error });
+				console.log(error);
+				return res.redirect("/");
 			}
 			//saves the token details into session
 			sftools.saveCanvasDetailsInSession(req, canvasRequest);
