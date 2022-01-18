@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 
 app.post("/canvasdemo", (req, res) => {
 	console.log("!!!!!!!!!!!!!!!!!!!Signed Request");
-	console.log(req.body);
+	console.log(req);
 	var signedrequest = decode(
 		req.body.signed_request,
 		signedRequestConsumerSecret
