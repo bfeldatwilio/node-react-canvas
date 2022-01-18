@@ -16,9 +16,11 @@ exports.getCanvasDetails = function (req) {
 	@callback(error, canvasRequestJSON);
  */
 exports.canvasCallback = function (body, secret, callback) {
+	let error = [];
 	if (!callback) throw "No callback set";
-	if (!body || !body.signed_request || !secret)
-		return callback("No body in request or secret");
+	if (!secret) error.push("No Secret");
+	if (!body) error.push("No Body in request");
+	if (error.length) return callback(error.join(", "));
 	try {
 		var canvasRequest = verifyAndDecode(body.signed_request, secret);
 		return callback(null, canvasRequest);
