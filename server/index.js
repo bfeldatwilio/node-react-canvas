@@ -4,7 +4,7 @@ const path = require("path");
 const decode = require("salesforce-signed-request");
 const jsforce = require("jsforce");
 const sftools = require("./sf-tools");
-const signedRequestConsumerSecret = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
+const SF_CANVASAPP_CLIENT_SECRET = process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
 const PORT = process.env.PORT || 3001;
 
