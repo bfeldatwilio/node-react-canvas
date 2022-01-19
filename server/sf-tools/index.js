@@ -42,7 +42,9 @@ function verifyAndDecode(input, secret) {
 	var encodedEnvelope = split[1];
 
 	// Deserialize the json body
-	var json_envelope = new Buffer(encodedEnvelope, "base64").toString("utf8");
+	var json_envelope = new Buffer.from(encodedEnvelope, "base64").toString(
+		"utf8"
+	);
 	var algorithm;
 	var canvasRequest;
 	try {
@@ -53,7 +55,10 @@ function verifyAndDecode(input, secret) {
 	} catch (e) {
 		throw "Error deserializing JSON: " + e;
 	}
-
+	console.log(
+		"******* context.user.userName ************** " +
+			canvasRequest.context.user.userName
+	);
 	// check algorithm - not relevant to error
 	if (!algorithm || algorithm.toUpperCase() !== "HMACSHA256") {
 		throw "Unknown algorithm " + algorithm + ". Expected HMACSHA256";

@@ -9,7 +9,7 @@ function App() {
 
 	const callback = (msg) => {
 		if (msg.status !== 200) {
-			console.log("error", msg.status);
+			console.log("error", msg);
 			return;
 		}
 		console.log("Payload____________________________");
@@ -18,6 +18,7 @@ function App() {
 
 	const onclick = (e) => {
 		console.log("clicked!!!!!!!!!!!!!!!!!!!!!");
+		console.log(client);
 		global.Sfdc.canvas.client.ctx(callback, client);
 	};
 
