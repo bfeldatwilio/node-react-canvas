@@ -6,8 +6,7 @@ const path = require("path");
 // 	require("dotenv").config();
 // }
 // const SF_CANVASAPP_CLIENT_SECRET =
-// process.env.SIGNED_REQUEST_CONSUMER_SECRET ||
-// "F7469B2D660947F3307E3C5CD57C626EB74A68B401580B4E4B5D908A2B43E465";
+// process.env.SIGNED_REQUEST_CONSUMER_SECRET;
 
 const PORT = process.env.PORT || 3001;
 

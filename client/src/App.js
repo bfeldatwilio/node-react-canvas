@@ -28,18 +28,18 @@ function App() {
 		}
 	}
 
-	// const onclick = async (e) => {
-	// 	var restUrl =
-	// 		sr.context.links.sobjectUrl +
-	// 		`Apttus__APTS_Agreement__c/${recordId}`;
-	// 	try {
-	// 		await ajaxCallPromise(sr.client, restUrl).then((data) => {
-	// 			setAgreement(data);
-	// 		});
-	// 	} catch (e) {
-	// 		console.log("Error!!!!!!!!!!!!!!!!!!!!", e);
-	// 	}
-	// };
+	const onclick = async (e) => {
+		var restUrl =
+			sr.context.links.sobjectUrl +
+			`Apttus__APTS_Agreement__c/${recordId}`;
+		try {
+			await ajaxCallPromise(sr.client, restUrl).then((data) => {
+				setAgreement(data);
+			});
+		} catch (e) {
+			console.log("Error!!!!!!!!!!!!!!!!!!!!", e);
+		}
+	};
 
 	const populateSignedRequest = () => {
 		getRefreshSignedRequest().then((data) => {
