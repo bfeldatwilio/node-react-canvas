@@ -55,10 +55,6 @@ function verifyAndDecode(input, secret) {
 	} catch (e) {
 		throw "Error deserializing JSON: " + e;
 	}
-	console.log(
-		"******* context.user.userName ************** " +
-			canvasRequest.context.user.userName
-	);
 	// check algorithm - not relevant to error
 	if (!algorithm || algorithm.toUpperCase() !== "HMACSHA256") {
 		throw "Unknown algorithm " + algorithm + ". Expected HMACSHA256";

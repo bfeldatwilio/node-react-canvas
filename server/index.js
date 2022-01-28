@@ -1,66 +1,85 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
-// const request = require("request");
-const compression = require("compression");
-const session = require("express-session");
-// const res = require("express/lib/response");
 const path = require("path");
-// const decode = require("salesforce-signed-request");
 // const jsforce = require("jsforce");
-const sftools = require("./sf-tools");
-if (process.env.NODE_ENV !== "production") {
-	require("dotenv").config();
-}
-const SF_CANVASAPP_CLIENT_SECRET =
-	process.env.SIGNED_REQUEST_CONSUMER_SECRET ||
-	"F7469B2D660947F3307E3C5CD57C626EB74A68B401580B4E4B5D908A2B43E465";
+// const sftools = require("./sf-tools");
+// if (process.env.NODE_ENV !== "production") {
+// 	require("dotenv").config();
+// }
+// const SF_CANVASAPP_CLIENT_SECRET =
+// process.env.SIGNED_REQUEST_CONSUMER_SECRET ||
+// "F7469B2D660947F3307E3C5CD57C626EB74A68B401580B4E4B5D908A2B43E465";
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
 
-app.use(express.json());
-app.use(compression());
-app.use(
-	express.urlencoded({
-		extended: true,
-	})
-);
-const sess = {
-	secret: "keyboard cat",
-	cookie: {},
-};
+// const cookieParser = require("cookie-parser");
+// const compression = require("compression");
 
-if (app.get("env") === "production") {
-	app.set("trust proxy", 1); // trust first proxy
-	sess.cookie.secure = true; // serve secure cookies
-}
-
-app.use(session(sess));
+// app.use(cookieParser());
+// app.use(express.json());
+// app.use(compression());
+// app.use(
+// 	express.urlencoded({
+// 		extended: true,
+// 	})
+// );
 
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.get("/api", (req, res) => {
 	console.log("inside the api request");
+	console.log("^^^^^^^^^^^^^^^ Detes ^^^^^^^^^^^^^^^^^^");
+
 	console.log(req.session);
 	res.json({ message: "Hello from the server!" });
 });
 
-app.post("/canvasdemo", (req, res) => {
-	sftools.canvasCallback(
-		req.body,
-		SF_CANVASAPP_CLIENT_SECRET,
-		function (error, canvasRequest) {
-			if (error) {
-				res.statusCode = 400;
-				console.log(error);
-				return res.redirect("/");
-			}
-			//saves the token details into session
-			sftools.saveCanvasDetailsInSession(req, canvasRequest);
-			return res.redirect("/");
-		}
-	);
+app.get("/", (req, res) => {
+	console.log("Request for root......................................");
+	res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+});
+
+app.post("/sign", (req, res) => {
+	return res.redirect("/");
+	// var sess = req.session;
+	// sftools.canvasCallback(
+	// 	req.body,
+	// 	SF_CANVASAPP_CLIENT_SECRET,
+	// 	function (error, canvasRequest) {
+	// 		if (error) {
+	// 			res.statusCode = 400;
+	// 			console.log(error);
+	// 			return res.redirect("/");
+	// 		}
+
+	// 		let username = canvasRequest.context.user.userName;
+	// 		let recordType =
+	// 			canvasRequest.context.environment.parameters.recordType;
+	// 		let sr_client = canvasRequest.client;
+	// 		let queryUrl = canvasRequest.context.links.queryUrl;
+	// 		let instanceUrl = canvasRequest.client.instanceUrl;
+	// 		sess.sr_client = sr_client;
+	// 		sess.oauthToken = canvasRequest.client.oauthToken;
+
+	// 		console.log("^^^ UserName ^^^ " + username);
+	// 		console.log(
+	// 			"************** Record Type ******************" + recordType
+	// 		);
+	// 		console.log(
+	// 			"************** queryUrl ******************" + queryUrl
+	// 		);
+	// 		console.log(
+	// 			"************** instanceUrl ******************" + instanceUrl
+	// 		);
+	// 		// console.log(
+	// 		// 	"************** canvas request ******************" +
+	// 		// 		JSON.stringify(canvasRequest, null, 4)
+	// 		// );
+
+	// 		sess.username = canvasRequest.context.user.userName;
+	// 	}
+	// );
 });
 
 // app.get("/oauth/wsf/callback", function (req, res) {
