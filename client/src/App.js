@@ -9,22 +9,58 @@ function App() {
 	// WHERE Id = "${recordId}"`;
 	// let SOQLquery2 = serialize({ query: `SELECT Id, Name FROM Account` });
 
-	const [agreement, setAgreement] = useState({});
-	const [recordId, setRecordId] = useState(null);
-	const [user, setUser] = useState({});
-	const [sr, setSr] = useState({});
+	const [agreement, setAgreement] = useState();
+	const [recordId, setRecordId] = useState();
+	const [user, setUser] = useState();
+	const [sr, setSr] = useState();
 
 	useEffect(() => {
-		if (sr.context?.links) {
+		console.log("First Call!!!!!!!!!!!");
+		populateSignedRequest();
+	}, []);
+
+	useEffect(() => {
+		if (recordId) {
+			console.log("2nd Call Use Effect after Record Set", recordId);
 			fetchAndSetAgreement(recordId);
 		}
 	}, [recordId]);
 
 	useEffect(() => {
-		populateSignedRequest();
-	}, []);
+		if (agreement) {
+			console.log(
+				"3rd Call, Use Effect from Agreement Set",
+				agreement.Name
+			);
+			fetchSoql();
+		}
+	}, [agreement]);
 
-	async function fetchAndSetAgreement(recordId) {
+	const measuredRef = useCallback(
+		(node) => {
+			if (node !== null) {
+				if (sr) {
+					let nodeHeight = node.getBoundingClientRect().height;
+					if (window) {
+						global.Sfdc.canvas.client.resize(sr.client, {
+							height: Math.ceil(nodeHeight) + "px",
+						});
+					}
+				}
+			}
+		},
+		[agreement]
+	);
+
+	const fetchSoql = async () => {
+		let soql = `SELECT Id, Name, (SELECT Id, Name, Account_SID_Friendly_Name__c FROM Agreement_SID__c) FROM Apttus__APTS_Agreement__c WHERE Id = "${recordId}"`;
+		let url = sr.context.links.queryUrl + "?q=SELECT+name+from+Account";
+		ajaxCallPromise(sr.client, url).then((data) => {
+			console.log(data);
+		});
+	};
+
+	const fetchAndSetAgreement = async (recordId) => {
 		var restUrl =
 			sr.context?.links?.sobjectUrl +
 			`Apttus__APTS_Agreement__c/${recordId}`;
@@ -35,7 +71,7 @@ function App() {
 		} catch (e) {
 			console.log("Error!!!!!!!!!!!!!!!!!!!!", e);
 		}
-	}
+	};
 
 	const populateSignedRequest = () => {
 		getRefreshSignedRequest().then((data) => {
@@ -51,29 +87,15 @@ function App() {
 		});
 	};
 
-	const measuredRef = useCallback(
-		(node) => {
-			if (node !== null) {
-				if (sr.client) {
-					let nodeHeight = node.getBoundingClientRect().height;
-					global.Sfdc.canvas.client.resize(sr.client, {
-						height: Math.ceil(nodeHeight) + "px",
-					});
-				}
-			}
-		},
-		[agreement]
-	);
-
 	return (
 		<article className="tile-container" ref={measuredRef}>
 			<div className="gradient-bg morning-gradient"></div>
 			<div className="icon-overlay heart-svg"></div>
 			<div className="tile-content">
 				<h1>React</h1>
-				<p>{user.fullName}</p>
-				<p>{agreement.Account_Legal_Name__c}</p>
-				<p>{agreement.Name}</p>
+				<p>{user?.fullName}</p>
+				<p>{agreement?.Account_Legal_Name__c}</p>
+				<p>{agreement?.Name}</p>
 			</div>
 		</article>
 	);

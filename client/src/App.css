@@ -68,11 +68,11 @@ article {
 }
 
 .purple-gradient {
-	background-image: linear-gradient(
-		to bottom,
-		var(--dotnet-purple-primary),
-		var(--dotnet-purple-dark)
-	);
+	background-image: linear-gradient(to bottom, #e100ff, #7f00ff);
+}
+
+.orange-gradient {
+	background-image: linear-gradient(to bottom, #f7971e, #ffd200);
 }
 
 .blue-gradient {
@@ -84,7 +84,7 @@ article {
 }
 
 .morning-gradient {
-	background-image: linear-gradient(to bottom, #ed4e50, #f06f00);
+	background-image: linear-gradient(to top, #ed4e50, #f06f00);
 }
 
 .has-shadow {
