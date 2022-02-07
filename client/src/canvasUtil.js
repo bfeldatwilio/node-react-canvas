@@ -27,4 +27,14 @@ const getRefreshSignedRequest = async () => {
 	return promise;
 };
 
-export { ajaxCallPromise, getRefreshSignedRequest };
+const getCurrentContext = async (client) => {
+	let promise = await new Promise((resolve, reject) => {
+		global.Sfdc.canvas.client.ctx((msg) => {
+			if (msg.status !== 200) reject(msg);
+			resolve(msg.payload);
+		}, client);
+	});
+	return promise;
+};
+
+export { ajaxCallPromise, getRefreshSignedRequest, getCurrentContext };

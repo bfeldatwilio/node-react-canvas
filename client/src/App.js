@@ -9,7 +9,6 @@ function App() {
 	// WHERE Id = "${recordId}"`;
 	// let SOQLquery2 = serialize({ query: `SELECT Id, Name FROM Account` });
 
-	const [data, setData] = useState(null);
 	const [agreement, setAgreement] = useState({});
 	const [recordId, setRecordId] = useState(null);
 	const [user, setUser] = useState({});
@@ -20,7 +19,7 @@ function App() {
 			sr.context.links.sobjectUrl +
 			`Apttus__APTS_Agreement__c/${recordId}`;
 		try {
-			await ajaxCallPromise(sr.client, restUrl).then((data) => {
+			ajaxCallPromise(sr.client, restUrl).then((data) => {
 				setAgreement(data);
 			});
 		} catch (e) {
@@ -28,59 +27,39 @@ function App() {
 		}
 	}
 
-	const onclick = async (e) => {
-		var restUrl =
-			sr.context.links.sobjectUrl +
-			`Apttus__APTS_Agreement__c/${recordId}`;
-		try {
-			await ajaxCallPromise(sr.client, restUrl).then((data) => {
-				setAgreement(data);
-			});
-		} catch (e) {
-			console.log("Error!!!!!!!!!!!!!!!!!!!!", e);
-		}
-	};
-
 	const populateSignedRequest = () => {
 		getRefreshSignedRequest().then((data) => {
-			console.log(data);
 			let payload = data.payload.response;
 			let part = payload.split(".")[1];
 			let signedRequest = global.Sfdc.canvas.decode(part);
 			let signedRequestJSON = JSON.parse(signedRequest);
+			setSr(signedRequestJSON);
 			setRecordId(
 				signedRequestJSON.context.environment.parameters.recordId
 			);
-			setSr(signedRequestJSON);
 			setUser(signedRequestJSON.context.user);
 		});
 	};
 
 	useEffect(() => {
-		if (sr.context) {
-			fetchAndSetAgreement(sr.context.environment.parameters.recordId);
-		}
-	}, [sr]);
+		fetchAndSetAgreement(recordId);
+	}, [recordId]);
 
 	useEffect(() => {
 		populateSignedRequest();
-		fetch("/api")
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data.message);
-				setData(data.message);
-			});
 	}, []);
 
 	return (
-		<div className="App">
-			<header className="App-header">
-				<p>{!user.userName ? "Loading..." : user.fullName}</p>
+		<article className="tile-container">
+			<div className="gradient-bg morning-gradient"></div>
+			<div className="icon-overlay heart-svg"></div>
+			<div className="tile-content">
+				<h1>React</h1>
+				<p>{user.fullName}</p>
 				<p>{agreement.Account_Legal_Name__c}</p>
 				<p>{agreement.Name}</p>
-				<button onClick={onclick}>Test</button>
-			</header>
-		</div>
+			</div>
+		</article>
 	);
 }
 

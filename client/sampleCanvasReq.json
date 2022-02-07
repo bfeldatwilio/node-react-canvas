@@ -46,6 +46,7 @@
 			"chatterGroupsUrl": "/services/data/v54.0/chatter/groups",
 			"chatterUsersUrl": "/services/data/v54.0/chatter/users",
 			"chatterFeedItemsUrl": "/services/data/v31.0/chatter/feed-items",
+			"compositeUrl": "/services/data/v54.0/composite",
 			"userUrl": "/00574000000EK5PAAW"
 		},
 		"application": {

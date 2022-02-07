@@ -13,24 +13,20 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // const cookieParser = require("cookie-parser");
-// const compression = require("compression");
+const compression = require("compression");
 
 // app.use(cookieParser());
-// app.use(express.json());
-// app.use(compression());
-// app.use(
-// 	express.urlencoded({
-// 		extended: true,
-// 	})
-// );
+app.use(express.json());
+app.use(compression());
+app.use(
+	express.urlencoded({
+		extended: true,
+	})
+);
 
 app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.get("/api", (req, res) => {
-	console.log("inside the api request");
-	console.log("^^^^^^^^^^^^^^^ Detes ^^^^^^^^^^^^^^^^^^");
-
-	console.log(req.session);
 	res.json({ message: "Hello from the server!" });
 });
 
