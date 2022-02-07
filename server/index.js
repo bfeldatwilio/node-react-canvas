@@ -77,19 +77,6 @@ app.post("/sign", (req, res) => {
 	// );
 });
 
-// app.get("/oauth/wsf/callback", function (req, res) {
-// 	console.log("oauth wsf callback", req.body, req.params, req.query);
-// 	var conn = new jsforce.Connection({ oauth2: oauth2 });
-// 	var code = req.query.code;
-// 	conn.authorize(code, function (err, userInfo) {
-// 		if (err) {
-// 			return console.error(err);
-// 		}
-// 		console.log("authorize response", conn, userInfo);
-// 		res.render("oauth2", { conn: conn });
-// 	});
-// });
-
 app.listen(PORT, () => {
 	console.log("Server listening on " + PORT);
 });
