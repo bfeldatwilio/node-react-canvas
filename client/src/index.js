@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import SID_Selector from "./components/SID_Selector";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<SID_Selector />
 	</React.StrictMode>,
 	document.getElementById("root")
 );
