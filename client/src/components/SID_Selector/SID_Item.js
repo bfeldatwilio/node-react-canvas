@@ -7,7 +7,9 @@ props:
 
 export default function SID_Item(props) {
 	const sid = props.sid;
+
 	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
+
 	const onCheckChange = (e) => {
 		if (alreadyLinked) {
 			props.unlinkSID(props.sid);
