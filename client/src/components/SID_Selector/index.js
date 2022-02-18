@@ -6,11 +6,12 @@ import {
 	ajaxCallCompositePromise,
 } from "../../utils/canvasUtil";
 import {
-	removeAgreementSidsFromOppySids,
+	mergeSIDS,
 	convertOppySids,
 	agreementSidSOQL,
 	sortAgreementSIDs,
 	opportunitySIDSKUSOQL,
+	additAgreementSIDs,
 } from "./SID_Selector_Helper";
 import "./SID_Selector.css";
 import SID_Item from "./SID_Item";
@@ -20,12 +21,7 @@ function SID_Selector() {
 	const [sr, setSr] = useState();
 	const [recordId, setRecordId] = useState();
 	const [agreement, setAgreement] = useState();
-	// Sids on the agreement and oppy
-	// AccountSidWrapper objects
-	const [agreementSIDs, setAgreementSIDs] = useState([]);
-	// Sids on the oppy
-	// Straight up SIDs
-	const [oppySids, setOppySids] = useState([]);
+	const [SIDs, setSIDs] = useState([]);
 
 	useEffect(() => {
 		populateSignedRequest();
@@ -49,7 +45,7 @@ function SID_Selector() {
 				}
 			}
 		},
-		[agreementSIDs]
+		[SIDs]
 	);
 
 	const populateSignedRequest = () => {
@@ -60,9 +56,7 @@ function SID_Selector() {
 			let signedRequest = global.Sfdc.canvas.decode(part);
 			let signedRequestJSON = JSON.parse(signedRequest);
 			setSr(signedRequestJSON);
-			setRecordId(
-				signedRequestJSON.context.environment.parameters.recordId
-			);
+			setRecordId(signedRequestJSON.context.environment.parameters.recordId);
 		});
 	};
 
@@ -91,8 +85,7 @@ function SID_Selector() {
 			referenceId: "sid",
 		};
 
-		const oppySoqlUrl =
-			sr.context.links.queryUrl + "?q=" + opportunitySIDSKUSOQL();
+		const oppySoqlUrl = sr.context.links.queryUrl + "?q=" + opportunitySIDSKUSOQL();
 		const oppySIDRequest = {
 			url: oppySoqlUrl,
 			method: "GET",
@@ -101,11 +94,7 @@ function SID_Selector() {
 
 		// format required by SF Composite API
 		const compositeRequestObj = {
-			compositeRequest: [
-				agreementRequest,
-				agreementSIDRequest,
-				oppySIDRequest,
-			],
+			compositeRequest: [agreementRequest, agreementSIDRequest, oppySIDRequest],
 		};
 
 		ajaxCallCompositePromise(sr, compositeRequestObj).then((res) => {
@@ -113,40 +102,85 @@ function SID_Selector() {
 		});
 	};
 
-	const linkSID = (sid) => {};
+	const linkSID = (oppSid, isPrimary, isFlex) => {
+		//if agreement already has a primary, throw error until they remove it
 
-	const unlinkSID = (sid) => {
+		setLoading(true);
+		let createAgreementSidBody = {
+			Agreement__c: agreement.Id,
+			Account_SID__c: oppSid.Account_SID__r.Id,
+		};
+		let createAgreementSIDReq = {
+			url: sr.context.links.sobjectUrl + "Agreement_SID__c",
+			method: "POST",
+			referenceId: "agreementSid",
+			body: createAgreementSidBody,
+		};
+		let reqArray = [createAgreementSIDReq];
+
+		// Create the patch for the agreement.
+		// Agreement has a field for Primary SID Name, FLEX SID Name, and a list of Additional SID Names
+		let patchAgreementBody = {};
+		if (isPrimary) {
+			patchAgreementBody.Primary_Account_SID__c = oppSid.Account_SID__r.Name;
+		} else if (isFlex) {
+			patchAgreementBody.Flex_Account_SID__c = oppSid.Account_SID__r.Name;
+		} else {
+			let allAdditionalSIDs = additAgreementSIDs(oppSid, SIDs);
+			allAdditionalSIDs.push(oppSid.Account_SID__r.Name);
+			patchAgreementBody.Additional_Account_SIDs__c = allAdditionalSIDs.join();
+		}
+		const updateAgreementReq = {
+			url: agreement.attributes.url,
+			method: "PATCH",
+			body: patchAgreementBody,
+			referenceId: "agreement",
+		};
+		reqArray.push(updateAgreementReq);
+		console.log(reqArray);
+
+		const compositeRequestObject = {
+			allOrNone: true,
+			compositeRequest: reqArray,
+		};
+
+		ajaxCallCompositePromise(sr, compositeRequestObject).then((res) => {
+			LoadComponentData();
+			console.log(res);
+		});
+	};
+
+	const unlinkSID = (agreementSid) => {
 		setLoading(true);
 		let deleteAgreementSIDReq = {
-			url: sid.attributes.url,
+			url: agreementSid.attributes.url,
 			method: "DELETE",
 			referenceId: "agreementSid",
 		};
 		let reqArray = [deleteAgreementSIDReq];
 
-		let agreementPrimaryOrFlexUpdate =
-			sid.Is_Flex_Account_SID__c || sid.Is_Primary_Account_SID__c;
-
-		if (agreementPrimaryOrFlexUpdate) {
-			let patchAgreementBody = {};
-			if (sid.Is_Primary_Account_SID__c) {
-				patchAgreementBody.Primary_Account_SID__c = null;
-			}
-
-			if (sid.Is_Flex_Account_SID__c) {
-				patchAgreementBody.Is_Primary_Account_SID__c = null;
-			}
-			let updateAgreementReq = {
-				url: agreement.attributes.url,
-				method: "PATCH",
-				body: patchAgreementBody,
-				referenceId: "agreement",
-			};
-			reqArray.push(updateAgreementReq);
+		let patchAgreementBody = {};
+		if (agreementSid.Is_Primary_Account_SID__c) {
+			patchAgreementBody.Primary_Account_SID__c = null;
+		} else if (agreementSid.Is_Flex_Account_SID__c) {
+			patchAgreementBody.Flex_Account_SID__c = null;
+		} else {
+			let allAdditionalSIDs = additAgreementSIDs(agreementSid, SIDs).filter(
+				(s) => s !== agreementSid.Account_SID__r.Name
+			);
+			patchAgreementBody.Additional_Account_SIDs__c = allAdditionalSIDs.join();
 		}
 
+		const updateAgreementReq = {
+			url: agreement.attributes.url,
+			method: "PATCH",
+			body: patchAgreementBody,
+			referenceId: "agreement",
+		};
+		reqArray.push(updateAgreementReq);
+
 		const compositeRequestObject = {
-			allOrNone: agreementPrimaryOrFlexUpdate,
+			allOrNone: true,
 			compositeRequest: reqArray,
 		};
 
@@ -160,26 +194,16 @@ function SID_Selector() {
 
 		let agreementData = data[0].body;
 		let agreementSIDData = data[1].body.records;
-		let oppySidData = data[2].body.records;
+		let oppySidData = data[2].body.records[0].Opp_SID_SKUs__r.records;
 		setAgreement(agreementData);
 
-		// remove agreement SIDS from the Opportunity list
-		let dedupedOppySids = removeAgreementSidsFromOppySids(
-			oppySidData[0].Opp_SID_SKUs__r.records,
-			agreementSIDData
-		);
-		// convert the opportunity SID into the wrapper
-		let convertedOppySids = convertOppySids(dedupedOppySids);
-		setOppySids(convertedOppySids);
-
 		let sortedAgreementSIDs = sortAgreementSIDs(agreementSIDData);
-		setAgreementSIDs(sortedAgreementSIDs);
-		setLoading(false);
-	};
+		let mergedSIDs = mergeSIDS(oppySidData, sortedAgreementSIDs);
 
-	const onCheckChange = (e) => {
-		let adding = e.target.checked;
-		console.log(adding);
+		setSIDs(mergedSIDs);
+		console.log(agreementData);
+		console.log(mergedSIDs);
+		setLoading(false);
 	};
 
 	return (
@@ -188,38 +212,18 @@ function SID_Selector() {
 			<div className="gradient-bg blue-gradient"></div>
 			<div className="icon-overlay circle-svg"></div>
 			<div className="tile-content">
-				<h1>React Canvas</h1>
-				<hr />
-				<h3>Agreement Info</h3>
+				<h2>Agreement Info</h2>
 				<p>{agreement?.Account_Legal_Name__c}</p>
 				<p>{agreement?.Name}</p>
 				<p>{agreement?.Primary_Account_SID__c}</p>
 				<hr />
-				<h3>SIDs</h3>
 				<ul className="list-unstyled">
-					{agreementSIDs.map((sid) => (
+					{SIDs.map((sid) => (
 						<SID_Item
 							key={sid.Id}
 							sid={sid}
 							unlinkSID={unlinkSID}
-							agreement={agreement}></SID_Item>
-					))}
-					{oppySids.map((osid) => (
-						<li key={osid.Account_SID_Id}>
-							<div className="checkbox">
-								<input
-									type="checkbox"
-									className="opacityzero"
-									id={osid.Account_SID_Id + "_cb"}
-									onChange={onCheckChange}
-								/>
-								<label
-									className="inlinebox"
-									htmlFor={osid.Account_SID_Id + "_cb"}>
-									{osid.Account_SID_Name}
-								</label>
-							</div>
-						</li>
+							linkSID={linkSID}></SID_Item>
 					))}
 				</ul>
 			</div>

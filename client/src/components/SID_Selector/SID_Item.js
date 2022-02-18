@@ -1,16 +1,18 @@
 /*
 props:
 	sid, AgreementSID passed in from the parent
-	unlinkSID, function passed in to call to unlink
+	unlinkSID, function to unlink the SID from the agreement
+	linkSID, function to link the SID to the agreement with arguments isPrimary, isFlex
 */
 
 export default function SID_Item(props) {
 	const sid = props.sid;
+	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
 	const onCheckChange = (e) => {
-		let adding = e.target.checked;
-		if (adding) {
-		} else {
+		if (alreadyLinked) {
 			props.unlinkSID(props.sid);
+		} else {
+			props.linkSID(props.sid, false, false);
 		}
 	};
 
@@ -22,7 +24,7 @@ export default function SID_Item(props) {
 					className="opacityzero"
 					id={sid.Id + "_cb"}
 					onChange={onCheckChange}
-					defaultChecked
+					checked={alreadyLinked}
 				/>
 				<label className="inlinebox" htmlFor={sid.Id + "_cb"}>
 					{sid.Account_SID__r.Name}
