@@ -1,40 +1,18 @@
-const mergeSIDS = (oppySidRecords, agreementSIDRecords) => {
+const removeAgreementSIDs = (oppySidRecords, agreementSIDRecords) => {
 	let agreementSID_IDArray = agreementSIDRecords.map((sid) => sid.Account_SID__r.Id); //array of agreement SIDs [SID_Id, SID_Id...]
 
 	let filteredOppySids = oppySidRecords.filter(
 		(oppysid) => !agreementSID_IDArray.includes(oppysid.Account_SID__r.Id)
 	); // Opportunity SIDS records minus those already in the agreement
-	return [...agreementSIDRecords, ...filteredOppySids];
+	return filteredOppySids;
 };
 
-const additAgreementSIDs = (activeSid, allSids) => {
-	let agreementSIDs = allSids.filter((sid) => sid.attributes.type === "Agreement_SID__c");
+const additAgreementSIDs = (agreementSIDs) => {
 	let agreementSIDNotPrimary = agreementSIDs.filter((sid) => !sid.Is_Primary_Account_SID__c);
-	let agreementSIDNotFlex = agreementSIDNotPrimary.filter((sid) => !sid.Is_Flex_Account_SID__c);
-	return agreementSIDNotFlex.map((sid) => sid.Account_SID__r.Name);
-};
-
-const convertOppySids = (oppySidRecords) => {
-	return oppySidRecords.map((sku) => {
-		// existing property compares this item to the agreementSID list
-		return {
-			Account_SID_Id: sku.Account_SID__r.Id,
-			Account_SID_Name: sku.Account_SID__r.Name,
-			Software_MRR: sku.Account_SID__r.Software_MRR__c,
-			Total_MRR: sku.Account_SID__r.Total_MRR__c,
-			New_Business_Opportunity: sku.Account_SID__r.New_Business_Opportunity__c,
-			Exception_Opportunity: sku.Account_SID__r.Exception_Opportunity__c,
-			NPC_Date_50: sku.Account_SID__r.NPC_Date_50__c,
-			Account_SID_Created_Date: sku.Account_SID__r.Account_SID_Created_Date__c,
-			Account_SID_Status: sku.Account_SID__r.Account_SID_Status__c,
-			Account_SID_Type: sku.Account_SID__r.Account_SID_Type__c,
-			Flex_Account: sku.Account_SID__r.Flex_Account__c,
-			Account_Id: sku.Account_SID__r.Account__r.Id,
-			SID_Entity: sku.Account_SID__r.sid_Entity__c,
-			SIDCurrency: sku.Account_SID__r.Customer_currency__c,
-			sidType: "",
-		};
-	});
+	let agreementSIDNotFlexOrPrimary = agreementSIDNotPrimary.filter(
+		(sid) => !sid.Is_Flex_Account_SID__c
+	);
+	return agreementSIDNotFlexOrPrimary.map((sid) => sid.Account_SID__r.Name);
 };
 
 const sortAgreementSIDs = (agreementSIDs) => {
@@ -46,8 +24,29 @@ const sortAgreementSIDs = (agreementSIDs) => {
 	return [...primaryActionSIDs, ...flexActionSIDs, ...nonFlexOrPrimarySIDs];
 };
 
+const createAgreementSIDRequest = (SIDsToAssociate, agreementId, url) => {
+	let addAgreementSIDRecords = SIDsToAssociate.map((agreementSID) => {
+		return {
+			attributes: { type: "Agreement_SID__c" },
+			Agreement__c: agreementId,
+			Account_SID__c: agreementSID.Account_SID__r.Id,
+		};
+	});
+	let createAgreementSidBody = {
+		allOrNone: false,
+		records: addAgreementSIDRecords,
+	};
+
+	return {
+		url: url,
+		method: "POST",
+		referenceId: "addAgreementSids",
+		body: createAgreementSidBody,
+	};
+};
+
 const opportunitySIDSKUSOQL = () => {
-	const soqlString = `SELECT Id, (SELECT Id,
+	const soqlString = `SELECT Id, Name, (SELECT Id,
 		Account_SID__r.Id,
 		Account_SID__r.Name,
 		Account_SID__r.Software_MRR__c,
@@ -96,10 +95,10 @@ const agreementSidSOQL = () => {
 };
 
 export {
-	mergeSIDS,
-	convertOppySids,
+	removeAgreementSIDs,
 	sortAgreementSIDs,
 	agreementSidSOQL,
 	opportunitySIDSKUSOQL,
 	additAgreementSIDs,
+	createAgreementSIDRequest,
 };

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import SID_Selector from "./components/SID_Selector";
 import reportWebVitals from "./reportWebVitals";
 

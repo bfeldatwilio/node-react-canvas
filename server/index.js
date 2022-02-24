@@ -37,6 +37,9 @@ app.get("/", (req, res) => {
 
 app.post("/sign", (req, res) => {
 	return res.redirect("/");
+
+	//use the signed request to switch between redirects
+
 	// var sess = req.session;
 	// sftools.canvasCallback(
 	// 	req.body,

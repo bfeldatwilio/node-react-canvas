@@ -1,27 +1,45 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "@salesforce/canvas-js-sdk";
+import "./SID_Selector.css";
 import {
-	ajaxCallPromise,
 	getRefreshSignedRequest,
 	ajaxCallCompositePromise,
+	publishEvent,
+	ajaxCall,
 } from "../../utils/canvasUtil";
 import {
-	mergeSIDS,
-	convertOppySids,
+	removeAgreementSIDs,
 	agreementSidSOQL,
 	sortAgreementSIDs,
 	opportunitySIDSKUSOQL,
 	additAgreementSIDs,
+	createAgreementSIDRequest,
 } from "./SID_Selector_Helper";
-import "./SID_Selector.css";
 import SID_Item from "./SID_Item";
+import Header_Options from "./headerOptions";
 
 function SID_Selector() {
 	const [loading, setLoading] = useState(true);
 	const [sr, setSr] = useState();
 	const [recordId, setRecordId] = useState();
 	const [agreement, setAgreement] = useState();
-	const [SIDs, setSIDs] = useState([]);
+	const [agreementSIDs, setAgreementSIDs] = useState([]);
+	const [opportunitySIDs, setOpportunitySIDs] = useState([]);
+	const [inLinkMode, setInLinkMode] = useState(false);
+	const [inPrimaryMode, setInPrimaryMode] = useState(false);
+	const [newPrimarySID, setNewPrimarySID] = useState();
+	const [showOpps, setShowOpps] = useState(false);
+
+	// TODO rename these to SIDsToAssociate, SIDsToDisassociate
+	const [SIDsToAssociate, setSIDsToAssociate] = useState([]);
+	const [SIDsToDisassociate, setSIDsToDisassociate] = useState([]);
+
+	const setDefaultState = () => {
+		setLoading(false);
+		setShowOpps(false);
+		setInLinkMode(false);
+		setInPrimaryMode(false);
+	};
 
 	useEffect(() => {
 		populateSignedRequest();
@@ -32,6 +50,14 @@ function SID_Selector() {
 			LoadComponentData();
 		}
 	}, [recordId]);
+
+	useEffect(() => {
+		setSIDsToAssociate([]);
+		setSIDsToDisassociate([]);
+		setTimeout(() => {
+			setShowOpps(inLinkMode);
+		}, 300);
+	}, [inLinkMode]);
 
 	// Tell Canvas to resize the window after everything loads
 	const measuredRef = useCallback(
@@ -45,7 +71,7 @@ function SID_Selector() {
 				}
 			}
 		},
-		[SIDs]
+		[agreementSIDs]
 	);
 
 	const populateSignedRequest = () => {
@@ -102,41 +128,58 @@ function SID_Selector() {
 		});
 	};
 
-	const linkSID = (oppSid, isPrimary, isFlex) => {
-		//if agreement already has a primary, throw error until they remove it
-
+	const saveLinksHandler = () => {
 		setLoading(true);
-		let createAgreementSidBody = {
-			Agreement__c: agreement.Id,
-			Account_SID__c: oppSid.Account_SID__r.Id,
-		};
-		let createAgreementSIDReq = {
-			url: sr.context.links.sobjectUrl + "Agreement_SID__c",
-			method: "POST",
-			referenceId: "agreementSid",
-			body: createAgreementSidBody,
-		};
-		let reqArray = [createAgreementSIDReq];
 
-		// Create the patch for the agreement.
-		// Agreement has a field for Primary SID Name, FLEX SID Name, and a list of Additional SID Names
-		let patchAgreementBody = {};
-		if (isPrimary) {
-			patchAgreementBody.Primary_Account_SID__c = oppSid.Account_SID__r.Name;
-		} else if (isFlex) {
-			patchAgreementBody.Flex_Account_SID__c = oppSid.Account_SID__r.Name;
-		} else {
-			let allAdditionalSIDs = additAgreementSIDs(oppSid, SIDs);
-			allAdditionalSIDs.push(oppSid.Account_SID__r.Name);
-			patchAgreementBody.Additional_Account_SIDs__c = allAdditionalSIDs.join();
+		///services/data/vXX.X/composite/sobjects
+		const batchUrl =
+			"/services/data/v" + sr.context.environment.version.api + "/composite/sobjects";
+
+		let reqArray = [];
+		let SIDsToDisassociateNameArr = SIDsToDisassociate.map((s) => s.Account_SID__r.Name);
+
+		// Create Query to add list of SIDs as batch
+		if (SIDsToAssociate.length > 0) {
+			let createAgreementSIDReq = createAgreementSIDRequest(
+				SIDsToAssociate,
+				agreement.Id,
+				batchUrl
+			);
+
+			reqArray.push(createAgreementSIDReq);
 		}
+
+		// create query to delete removed SIDs
+		if (SIDsToDisassociate.length > 0) {
+			let agreementSIDIdArr = SIDsToDisassociate.map((s) => s.Id);
+			let queryString = "/?ids=" + agreementSIDIdArr.join();
+
+			let removeAgreementSIDReq = {
+				url: batchUrl + queryString,
+				method: "DELETE",
+				referenceId: "removeAgreementSids",
+			};
+			reqArray.push(removeAgreementSIDReq);
+		}
+
+		// create Query to update Agreement with newly linked and unlinked SIDs
+		let currentSIDNamesNotFlexOrPrimary = additAgreementSIDs(agreementSIDs);
+		let SIDsToAssociateNameArr = SIDsToAssociate.map((s) => s.Account_SID__r.Name);
+		let currentSIDsPlusNew = [...currentSIDNamesNotFlexOrPrimary, ...SIDsToAssociateNameArr];
+		let afterRemovedPulled = currentSIDsPlusNew.filter(
+			(sid) => !SIDsToDisassociateNameArr.includes(sid)
+		);
+		let patchAgreementBody = { Additional_Account_SIDs__c: afterRemovedPulled.join() };
+
 		const updateAgreementReq = {
 			url: agreement.attributes.url,
 			method: "PATCH",
 			body: patchAgreementBody,
 			referenceId: "agreement",
 		};
+
 		reqArray.push(updateAgreementReq);
+
 		console.log(reqArray);
 
 		const compositeRequestObject = {
@@ -145,48 +188,17 @@ function SID_Selector() {
 		};
 
 		ajaxCallCompositePromise(sr, compositeRequestObject).then((res) => {
+			setDefaultState();
 			LoadComponentData();
-			console.log(res);
 		});
 	};
 
-	const unlinkSID = (agreementSid) => {
-		setLoading(true);
-		let deleteAgreementSIDReq = {
-			url: agreementSid.attributes.url,
-			method: "DELETE",
-			referenceId: "agreementSid",
+	const navToSID = (accountSIDId) => {
+		var event = {
+			name: "s1.navigateToSObject",
+			payload: { recordId: accountSIDId },
 		};
-		let reqArray = [deleteAgreementSIDReq];
-
-		let patchAgreementBody = {};
-		if (agreementSid.Is_Primary_Account_SID__c) {
-			patchAgreementBody.Primary_Account_SID__c = null;
-		} else if (agreementSid.Is_Flex_Account_SID__c) {
-			patchAgreementBody.Flex_Account_SID__c = null;
-		} else {
-			let allAdditionalSIDs = additAgreementSIDs(agreementSid, SIDs).filter(
-				(s) => s !== agreementSid.Account_SID__r.Name
-			);
-			patchAgreementBody.Additional_Account_SIDs__c = allAdditionalSIDs.join();
-		}
-
-		const updateAgreementReq = {
-			url: agreement.attributes.url,
-			method: "PATCH",
-			body: patchAgreementBody,
-			referenceId: "agreement",
-		};
-		reqArray.push(updateAgreementReq);
-
-		const compositeRequestObject = {
-			allOrNone: true,
-			compositeRequest: reqArray,
-		};
-
-		ajaxCallCompositePromise(sr, compositeRequestObject).then((res) => {
-			LoadComponentData();
-		});
+		publishEvent(sr, event);
 	};
 
 	const setPageData = (res) => {
@@ -196,36 +208,121 @@ function SID_Selector() {
 		let agreementSIDData = data[1].body.records;
 		let oppySidData = data[2].body.records[0].Opp_SID_SKUs__r.records;
 		setAgreement(agreementData);
-
 		let sortedAgreementSIDs = sortAgreementSIDs(agreementSIDData);
-		let mergedSIDs = mergeSIDS(oppySidData, sortedAgreementSIDs);
+		setAgreementSIDs(sortedAgreementSIDs);
 
-		setSIDs(mergedSIDs);
-		console.log(agreementData);
-		console.log(mergedSIDs);
+		let oppySidsNotInAgreement = removeAgreementSIDs(oppySidData, sortedAgreementSIDs);
+		setOpportunitySIDs(oppySidsNotInAgreement);
+
 		setLoading(false);
 	};
 
+	const associationHandler = (oppSID, adding) => {
+		if (adding) {
+			setSIDsToAssociate([oppSID, ...SIDsToAssociate]);
+		} else {
+			let updatedSIDsArray = SIDsToAssociate.filter((s) => s.Id !== oppSID.Id);
+			setSIDsToAssociate(updatedSIDsArray);
+		}
+	};
+
+	const disassociationHandler = (agreementSID, adding) => {
+		if (adding) {
+			setSIDsToDisassociate([agreementSID, ...SIDsToDisassociate]);
+		} else {
+			let updatedSIDsArray = SIDsToDisassociate.filter((s) => s.Id !== agreementSID.Id);
+			setSIDsToDisassociate(updatedSIDsArray);
+		}
+	};
+
+	const primaryChangeHandler = (agreementSID) => {
+		setNewPrimarySID(agreementSID);
+	};
+
+	const savePrimaryHandler = () => {
+		setLoading(true);
+		let patchAgreementBody = {
+			Primary_Account_SID__c: newPrimarySID.Account_SID__r.Name,
+		};
+
+		ajaxCall(sr, "PATCH", agreement.attributes.url, patchAgreementBody).then((data) => {
+			setDefaultState();
+			LoadComponentData();
+		});
+	};
+
 	return (
-		<article className="tile-container" ref={measuredRef}>
-			<div className={`loader ${loading ? "active" : ""}`}></div>
-			<div className="gradient-bg blue-gradient"></div>
-			<div className="icon-overlay circle-svg"></div>
-			<div className="tile-content">
-				<h2>Agreement Info</h2>
-				<p>{agreement?.Account_Legal_Name__c}</p>
-				<p>{agreement?.Name}</p>
-				<p>{agreement?.Primary_Account_SID__c}</p>
-				<hr />
-				<ul className="list-unstyled">
-					{SIDs.map((sid) => (
-						<SID_Item
-							key={sid.Id}
-							sid={sid}
-							unlinkSID={unlinkSID}
-							linkSID={linkSID}></SID_Item>
-					))}
-				</ul>
+		<article className="slds-card" ref={measuredRef}>
+			{loading && (
+				<div className="loader">
+					<div role="status" className="slds-spinner slds-spinner_small">
+						<span className="slds-assistive-text">Loading</span>
+						<div className="slds-spinner__dot-a"></div>
+						<div className="slds-spinner__dot-b"></div>
+					</div>
+				</div>
+			)}
+			<div className="slds-card__header slds-grid header">
+				<header className="slds-media slds-media_center slds-has-flexi-truncate">
+					<div className="slds-media__figure">
+						<span
+							className="slds-icon_container slds-icon-standard-account"
+							title="account">
+							<svg className="slds-icon" aria-hidden="true">
+								<use href="/assets/icons/standard-sprite/svg/symbols.svg#topic"></use>
+							</svg>
+							<span className="slds-assistive-text">agreement SIDs</span>
+						</span>
+					</div>
+					<div className="slds-media__body">
+						<h2 className="slds-card__header-title">
+							<a
+								href="#"
+								className="slds-card__header-link slds-truncate"
+								title="Accounts">
+								<span>Agreement SIDs ({agreementSIDs.length})</span>
+							</a>
+						</h2>
+					</div>
+					<Header_Options
+						inLinkMode={inLinkMode}
+						setInLinkMode={setInLinkMode}
+						inPrimaryMode={inPrimaryMode}
+						setInPrimaryMode={setInPrimaryMode}
+						onSaveLinks={saveLinksHandler}
+						onSavePrimary={savePrimaryHandler}
+					/>
+				</header>
+			</div>
+			<div className="slds-card__body body">
+				<table
+					className="slds-table slds-no-row-hover slds-table_cell-buffer"
+					role="grid"
+					aria-label="SIDs on Agreement Table">
+					<tbody>
+						{agreementSIDs.map((sid) => (
+							<SID_Item
+								key={sid.Id}
+								sid={sid}
+								navToSID={navToSID}
+								inLinkMode={inLinkMode}
+								onAssociationChange={associationHandler}
+								onDisassociationChange={disassociationHandler}
+								onPrimaryChange={primaryChangeHandler}
+								inPrimaryMode={inPrimaryMode}></SID_Item>
+						))}
+						{showOpps &&
+							opportunitySIDs.map((sid) => (
+								<SID_Item
+									key={sid.Id}
+									sid={sid}
+									navToSID={navToSID}
+									inLinkMode={inLinkMode}
+									onAssociationChange={associationHandler}
+									onDisassociationChange={disassociationHandler}></SID_Item>
+							))}
+					</tbody>
+				</table>
 			</div>
 		</article>
 	);

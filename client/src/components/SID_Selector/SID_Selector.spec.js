@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { mount } from "@cypress/react";
+import SID_Selector from "./index";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+it("renders AgreementInfo", () => {
+	mount(<SID_Selector />);
+	cy.get("h2").contains("Agreement Info");
 });
