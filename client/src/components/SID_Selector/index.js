@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "@salesforce/canvas-js-sdk";
 import "./SID_Selector.css";
+import EmptyState from "../../utils/emptyState";
 import {
 	getRefreshSignedRequest,
 	ajaxCallCompositePromise,
-	publishEvent,
 	ajaxCall,
+	publishEvent,
 } from "../../utils/canvasUtil";
 import {
 	removeAgreementSIDs,
@@ -137,6 +138,7 @@ function SID_Selector() {
 
 		let reqArray = [];
 		let SIDsToDisassociateNameArr = SIDsToDisassociate.map((s) => s.Account_SID__r.Name);
+		let primaryIsRemoved = false;
 
 		// Create Query to add list of SIDs as batch
 		if (SIDsToAssociate.length > 0) {
@@ -151,6 +153,7 @@ function SID_Selector() {
 
 		// create query to delete removed SIDs
 		if (SIDsToDisassociate.length > 0) {
+			primaryIsRemoved = SIDsToDisassociate.some((s) => s.Is_Primary_Account_SID__c);
 			let agreementSIDIdArr = SIDsToDisassociate.map((s) => s.Id);
 			let queryString = "/?ids=" + agreementSIDIdArr.join();
 
@@ -170,6 +173,9 @@ function SID_Selector() {
 			(sid) => !SIDsToDisassociateNameArr.includes(sid)
 		);
 		let patchAgreementBody = { Additional_Account_SIDs__c: afterRemovedPulled.join() };
+		if (primaryIsRemoved) {
+			patchAgreementBody.Primary_Account_SID__c = null;
+		}
 
 		const updateAgreementReq = {
 			url: agreement.attributes.url,
@@ -241,8 +247,13 @@ function SID_Selector() {
 
 	const savePrimaryHandler = () => {
 		setLoading(true);
+		let SIDName = newPrimarySID.Account_SID__r.Name;
+		let updatedAdditionalSIDs = agreement.Additional_Account_SIDs__c.split(",")
+			.filter((s) => s !== SIDName)
+			.join();
 		let patchAgreementBody = {
-			Primary_Account_SID__c: newPrimarySID.Account_SID__r.Name,
+			Primary_Account_SID__c: SIDName,
+			Additional_Account_SIDs__c: updatedAdditionalSIDs,
 		};
 
 		ajaxCall(sr, "PATCH", agreement.attributes.url, patchAgreementBody).then((data) => {
@@ -291,10 +302,14 @@ function SID_Selector() {
 						setInPrimaryMode={setInPrimaryMode}
 						onSaveLinks={saveLinksHandler}
 						onSavePrimary={savePrimaryHandler}
+						noSIDs={agreementSIDs.length === 0}
 					/>
 				</header>
 			</div>
 			<div className="slds-card__body body">
+				{agreementSIDs.length === 0 && sr && !inLinkMode && (
+					<EmptyState loginUrl={sr.context.links.loginUrl} />
+				)}
 				<table
 					className="slds-table slds-no-row-hover slds-table_cell-buffer"
 					role="grid"
@@ -309,6 +324,7 @@ function SID_Selector() {
 								onAssociationChange={associationHandler}
 								onDisassociationChange={disassociationHandler}
 								onPrimaryChange={primaryChangeHandler}
+								newPrimarySID={newPrimarySID}
 								inPrimaryMode={inPrimaryMode}></SID_Item>
 						))}
 						{showOpps &&

@@ -9,31 +9,24 @@ props:
 	onDisassociationChange: handler for already associated SIDs
 	onAssociationChange: handler for opportunity SIDs
 	onPrimaryChange: function to call when the radio has changed
+	newPrimarySID: the currently selected primary SID
 	*/
 
 export default function SID_Item(props) {
 	const sid = props.sid;
-	const attribute = sid.Is_Primary_Account_SID__c
-		? " Primary"
-		: sid.Is_Flex_Account_SID__c
-		? " Flex"
-		: sid.attributes.type === "Agreement_SID__c"
-		? ""
-		: "";
-
+	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
+	const alreadyPrimary = alreadyLinked ? sid.Is_Primary_Account_SID__c : false;
+	const attribute = alreadyPrimary ? " Primary" : sid.Is_Flex_Account_SID__c ? " Flex" : "";
 	const stateClasses = {
 		AGREEMENTSIDREMOVED: "red_bg",
 		OPPYSIDADDED: "green_bg",
 		NOTHING: "",
 	};
 
-	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
-	const alreadyPrimary = alreadyLinked ? sid.Is_Primary_Account_SID__c : false;
-
 	const [toBeRemoved, setToBeRemoved] = useState(false);
 	const [toBeAdded, setToBeAdded] = useState(false);
 	const [checked, setChecked] = useState(alreadyLinked);
-	const [radioOn, setRadioOn] = useState(alreadyPrimary);
+	const [radioOn, setRadioOn] = useState(false);
 	const [activeClass, setActiveClass] = useState(stateClasses.NOTHING);
 
 	const setDefaultState = () => {
@@ -58,9 +51,15 @@ export default function SID_Item(props) {
 		props.onDisassociationChange(sid, toBeRemoved);
 	}, [toBeRemoved]);
 
+	useEffect(() => {
+		if (props.newPrimarySID) {
+			let imSelected = props.newPrimarySID.Id === sid.Id;
+			setRadioOn(imSelected);
+		}
+	}, [props.newPrimarySID]);
+
 	const onCheckChange = (e) => {
 		let isChecked = e.currentTarget.checked;
-
 		setChecked(isChecked);
 
 		if (alreadyLinked) {
@@ -71,9 +70,8 @@ export default function SID_Item(props) {
 	};
 
 	const onRadioChanged = (e) => {
-		let isChecked = e.currentTarget.checked;
-		console.log(sid.Account_SID__r.Name);
-		setRadioOn(isChecked);
+		console.log("changed");
+		setRadioOn(!radioOn);
 		props.onPrimaryChange(sid);
 	};
 
@@ -86,7 +84,11 @@ export default function SID_Item(props) {
 		<tr className={activeClass}>
 			<td className="nostyle">
 				<div className={`editArea ${props.inLinkMode ? "show" : ""}`}>
-					<input onChange={onCheckChange} type="checkbox" checked={checked}></input>
+					<input
+						className="slds-checkbox"
+						onChange={onCheckChange}
+						type="checkbox"
+						checked={checked}></input>
 				</div>
 			</td>
 			<td className="nostyle">
@@ -94,6 +96,8 @@ export default function SID_Item(props) {
 					<input
 						onChange={onRadioChanged}
 						type="radio"
+						value={sid.Id}
+						id={sid.Id}
 						checked={radioOn}
 						name="primary"></input>
 				</div>

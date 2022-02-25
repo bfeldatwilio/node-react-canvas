@@ -4,8 +4,11 @@ import React from "react";
 props:
 	inLinkMode, boolean value if parent is in SID linking mode
     setInLinkMode, function to toggle the inLinkMode boolean
+    inPrimaryMode, boolean value if the parent is in SID Primary selection mode
+    setInPrimaryMode, function to toggle the inPrimary boolean and show the primary form
     onSaveLinks, function when save button on Links view is pressed
     onSavePrimary, function when save button on Primary view is pressed
+    noSIDs, if there are no agreement sids, disable the add flex/primary buttons
 */
 
 export default function Header_Options(props) {
@@ -52,10 +55,15 @@ export default function Header_Options(props) {
 					<button onClick={setLinkMode} className="slds-button slds-button_neutral">
 						Link SIDs
 					</button>
-					<button onClick={setPrimaryMode} className="slds-button slds-button_neutral">
+					<button
+						disabled={props.noSIDs}
+						onClick={setPrimaryMode}
+						className="slds-button slds-button_neutral">
 						Set Primary
 					</button>
-					<button className="slds-button slds-button_neutral">Set Flex</button>
+					<button disabled={props.noSIDs} className="slds-button slds-button_neutral">
+						Set Flex
+					</button>
 				</div>
 			)}
 		</>
