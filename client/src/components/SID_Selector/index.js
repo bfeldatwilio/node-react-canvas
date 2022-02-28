@@ -100,7 +100,7 @@ function SID_Selector() {
 		const agreementRequest = {
 			url:
 				sr.context.links.sobjectUrl +
-				`Apttus__APTS_Agreement__c/${recordId}?fields=Id, Related_Opportunity_APTS__c, Primary_Account_SID__c, Flex_Account_SID__c, Additional_Account_SIDs__c, Payment_Type__c, Name, Account_Legal_Name__c`,
+				`Apttus__APTS_Agreement__c/${recordId}?fields=Id, Related_Opportunity_APTS__c, Primary_Account_SID__c, Flex_Account_SID__c, Additional_Account_SIDs__c, Currency_OF_Generate__c, Twilio_Signing_Entity_OF_Generate__c, Payment_Type__c, Name, Account_Legal_Name__c`,
 			method: "GET",
 			referenceId: "agreement",
 		};
@@ -325,6 +325,7 @@ function SID_Selector() {
 								onDisassociationChange={disassociationHandler}
 								onPrimaryChange={primaryChangeHandler}
 								newPrimarySID={newPrimarySID}
+								agreementCurrency={agreement.Currency_OF_Generate__c}
 								inPrimaryMode={inPrimaryMode}></SID_Item>
 						))}
 						{showOpps &&
@@ -334,6 +335,7 @@ function SID_Selector() {
 									sid={sid}
 									navToSID={navToSID}
 									inLinkMode={inLinkMode}
+									agreementCurrency={agreement.Currency_OF_Generate__c}
 									onAssociationChange={associationHandler}
 									onDisassociationChange={disassociationHandler}></SID_Item>
 							))}

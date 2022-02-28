@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /*
 props:
@@ -12,27 +12,36 @@ props:
 */
 
 export default function Header_Options(props) {
+	const [disableSave, setDisableSave] = useState(false);
+
 	const saveLinks = () => {
 		props.onSaveLinks();
+		setDisableSave(true);
 	};
 
 	const savePrimary = () => {
 		props.onSavePrimary();
+		setDisableSave(true);
 	};
 
 	const setLinkMode = () => {
 		props.setInLinkMode(!props.inLinkMode);
+		setDisableSave(false);
 	};
 
 	const setPrimaryMode = () => {
 		props.setInPrimaryMode(!props.inPrimaryMode);
+		setDisableSave(false);
 	};
 
 	return (
 		<>
 			{props.inLinkMode && (
 				<div id="linkModeFunctions" className="slds-button-group" role="group">
-					<button onClick={saveLinks} className="slds-button slds-button_brand">
+					<button
+						disabled={disableSave}
+						onClick={saveLinks}
+						className="slds-button slds-button_brand">
 						Save
 					</button>
 					<button onClick={setLinkMode} className="slds-button slds-button_neutral">
@@ -42,7 +51,10 @@ export default function Header_Options(props) {
 			)}
 			{props.inPrimaryMode && (
 				<div id="linkModeFunctions" className="slds-button-group" role="group">
-					<button onClick={savePrimary} className="slds-button slds-button_brand">
+					<button
+						disabled={disableSave}
+						onClick={savePrimary}
+						className="slds-button slds-button_brand">
 						Save
 					</button>
 					<button onClick={setPrimaryMode} className="slds-button slds-button_neutral">
@@ -52,7 +64,11 @@ export default function Header_Options(props) {
 			)}
 			{!props.inLinkMode && !props.inPrimaryMode && (
 				<div id="defaultFunctions" className="slds-button-group" role="group">
-					<button onClick={setLinkMode} className="slds-button slds-button_neutral">
+					<button
+						onClick={setLinkMode}
+						className={`slds-button ${
+							props.noSIDs ? "slds-button_brand" : "slds-button_neutral"
+						}`}>
 						Link SIDs
 					</button>
 					<button

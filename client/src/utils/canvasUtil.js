@@ -38,7 +38,8 @@ const ajaxCallGET = async (sr, queryUrl) => {
 };
 
 // https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections_create.htm
-const ajaxCallBatchPromise = async (sr, body) => {
+// https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_sobjects_collections.htm
+const ajaxCallCollectionPromise = async (sr, body) => {
 	const batchUrl =
 		sr.client.instanceUrl +
 		"/services/data/v" +
@@ -128,7 +129,7 @@ const getCurrentContext = async (client) => {
 export {
 	ajaxCall,
 	ajaxCallGET,
-	ajaxCallBatchPromise,
+	ajaxCallCollectionPromise,
 	ajaxCallCompositePromise,
 	publishEvent,
 	getRefreshSignedRequest,

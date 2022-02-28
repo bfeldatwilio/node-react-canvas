@@ -75,3 +75,17 @@ td > div {
 	align-items: center;
 	text-align: left;
 }
+
+.slds-card {
+	max-height: 500px;
+}
+
+.red-text {
+	color: red;
+}
+
+.mismatch-popover {
+	position: absolute;
+	top: -4px;
+	left: 35px;
+}

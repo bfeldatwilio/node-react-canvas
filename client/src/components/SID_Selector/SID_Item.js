@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 /*
 props:
 	sid, AgreementSID passed in from the parent
+	agreementCurrency, the currency of the agreement to indicate match or mismatch
 	navToSID, function taking the Account SID Id SF navigation
 	inLinkMode: toggle if in link UI mode for linking SIDs
 	inPrimaryMode: toggle if in select primary SID mode
@@ -69,8 +70,7 @@ export default function SID_Item(props) {
 		}
 	};
 
-	const onRadioChanged = (e) => {
-		console.log("changed");
+	const onRadioChanged = () => {
 		setRadioOn(!radioOn);
 		props.onPrimaryChange(sid);
 	};
@@ -78,6 +78,13 @@ export default function SID_Item(props) {
 	const nav_to_sid = (e) => {
 		e.preventDefault();
 		props.navToSID(sid.Account_SID__r.Id);
+	};
+
+	const currencyMatchesParent = () => {
+		return (
+			props.agreementCurrency.toUpperCase() ===
+			props.sid.Account_SID__r.Customer_currency__c.toUpperCase()
+		);
 	};
 
 	return (
@@ -118,8 +125,8 @@ export default function SID_Item(props) {
 				</div>
 			</td>
 			<td>
-				<div>
-					<div className="sub_sid_data">
+				<div className={`sub_sid_data ${!currencyMatchesParent() ? "red-text" : ""}`}>
+					<div>
 						<span>SW MMR: </span>
 						{sid.Account_SID__r.Software_MRR__c}{" "}
 						{sid.Account_SID__r.Customer_currency__c}
