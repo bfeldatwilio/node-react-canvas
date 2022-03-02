@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import SID_Selector from "./components/SID_Selector";
+import SIDSelector from "./components/SIDSelector";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<SID_Selector />
+		<SIDSelector />
 	</React.StrictMode>,
 	document.getElementById("root")
 );

@@ -116,16 +116,6 @@ const getRefreshSignedRequest = async () => {
 	return promise;
 };
 
-const getCurrentContext = async (client) => {
-	let promise = await new Promise((resolve, reject) => {
-		global.Sfdc.canvas.client.ctx((msg) => {
-			if (msg.status !== 200) reject(msg);
-			resolve(msg.payload);
-		}, client);
-	});
-	return promise;
-};
-
 export {
 	ajaxCall,
 	ajaxCallGET,
@@ -133,5 +123,4 @@ export {
 	ajaxCallCompositePromise,
 	publishEvent,
 	getRefreshSignedRequest,
-	getCurrentContext,
 };

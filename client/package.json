@@ -14,7 +14,7 @@
 	"scripts": {
 		"start": "react-scripts start",
 		"build": "react-scripts build",
-		"test": "cypress open",
+		"test": "react-scripts test",
 		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
@@ -37,12 +37,10 @@
 		]
 	},
 	"devDependencies": {
-		"@cypress/react": "^5.12.3",
-		"@cypress/webpack-dev-server": "^1.8.1",
 		"@testing-library/jest-dom": "^5.16.1",
 		"@testing-library/react": "^12.1.2",
 		"@testing-library/user-event": "^13.5.0",
-		"@types/salesforce__canvas-js-sdk": "^1.41.2",
-		"cypress": "^9.5.0"
+		"@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
+		"enzyme": "^3.11.0"
 	}
 }

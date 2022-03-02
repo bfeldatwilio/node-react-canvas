@@ -13,7 +13,7 @@ props:
 	newPrimarySID: the currently selected primary SID
 	*/
 
-export default function SID_Item(props) {
+export default function SIDItem(props) {
 	const sid = props.sid;
 	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
 	const alreadyPrimary = alreadyLinked ? sid.Is_Primary_Account_SID__c : false;

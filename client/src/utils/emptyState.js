@@ -4,7 +4,7 @@ export default function EmptyState(props) {
 	const url = props.loginUrl + "/projRes/ui-home-private/emptyStates/noEvents.svg";
 	return (
 		<div className="slds-illustration slds-illustration">
-			<img src={url} />
+			<img alt="empty state" src={url} />
 			<div className="slds-text-longform">
 				<h3 className="slds-text-heading_medium">Agreement SIDs</h3>
 

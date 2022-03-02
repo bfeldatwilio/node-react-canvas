@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "@salesforce/canvas-js-sdk";
-import "./SID_Selector.css";
+import "./SIDSelector.css";
 import EmptyState from "../../utils/emptyState";
 import {
 	getRefreshSignedRequest,
@@ -15,11 +15,11 @@ import {
 	opportunitySIDSKUSOQL,
 	additAgreementSIDs,
 	createAgreementSIDRequest,
-} from "./SID_Selector_Helper";
-import SID_Item from "./SID_Item";
-import Header_Options from "./headerOptions";
+} from "./SIDSelectorHelper";
+import SIDItem from "./SIDItem";
+import HeaderOptions from "./headerOptions";
 
-function SID_Selector() {
+function SIDSelector() {
 	const [loading, setLoading] = useState(true);
 	const [sr, setSr] = useState();
 	const [recordId, setRecordId] = useState();
@@ -82,6 +82,7 @@ function SID_Selector() {
 			let part = payload.split(".")[1];
 			let signedRequest = global.Sfdc.canvas.decode(part);
 			let signedRequestJSON = JSON.parse(signedRequest);
+			console.log(signedRequestJSON);
 			setSr(signedRequestJSON);
 			setRecordId(signedRequestJSON.context.environment.parameters.recordId);
 		});
@@ -185,8 +186,6 @@ function SID_Selector() {
 		};
 
 		reqArray.push(updateAgreementReq);
-
-		console.log(reqArray);
 
 		const compositeRequestObject = {
 			allOrNone: true,
@@ -295,7 +294,7 @@ function SID_Selector() {
 							</a>
 						</h2>
 					</div>
-					<Header_Options
+					<HeaderOptions
 						inLinkMode={inLinkMode}
 						setInLinkMode={setInLinkMode}
 						inPrimaryMode={inPrimaryMode}
@@ -316,7 +315,7 @@ function SID_Selector() {
 					aria-label="SIDs on Agreement Table">
 					<tbody>
 						{agreementSIDs.map((sid) => (
-							<SID_Item
+							<SIDItem
 								key={sid.Id}
 								sid={sid}
 								navToSID={navToSID}
@@ -326,18 +325,18 @@ function SID_Selector() {
 								onPrimaryChange={primaryChangeHandler}
 								newPrimarySID={newPrimarySID}
 								agreementCurrency={agreement.Currency_OF_Generate__c}
-								inPrimaryMode={inPrimaryMode}></SID_Item>
+								inPrimaryMode={inPrimaryMode}></SIDItem>
 						))}
 						{showOpps &&
 							opportunitySIDs.map((sid) => (
-								<SID_Item
+								<SIDItem
 									key={sid.Id}
 									sid={sid}
 									navToSID={navToSID}
 									inLinkMode={inLinkMode}
 									agreementCurrency={agreement.Currency_OF_Generate__c}
 									onAssociationChange={associationHandler}
-									onDisassociationChange={disassociationHandler}></SID_Item>
+									onDisassociationChange={disassociationHandler}></SIDItem>
 							))}
 					</tbody>
 				</table>
@@ -346,4 +345,4 @@ function SID_Selector() {
 	);
 }
 
-export default SID_Selector;
+export default SIDSelector;
