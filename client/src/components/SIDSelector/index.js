@@ -7,6 +7,8 @@ import {
 	ajaxCallCompositePromise,
 	ajaxCall,
 	publishEvent,
+	decode,
+	resize,
 } from "../../utils/canvasUtil";
 import {
 	removeAgreementSIDs,
@@ -66,9 +68,7 @@ function SIDSelector() {
 			if (node !== null) {
 				if (agreement) {
 					let nodeHeight = node.getBoundingClientRect().height;
-					global.Sfdc.canvas.client.resize(sr.client, {
-						height: Math.ceil(nodeHeight) + "px",
-					});
+					resize(sr.client, Math.ceil(nodeHeight));
 				}
 			}
 		},
@@ -80,9 +80,8 @@ function SIDSelector() {
 			let payload = data.payload.response;
 			// TODO  Add in the validation.  Get the consumer key from env and decode the payload[0] to verify authenticity
 			let part = payload.split(".")[1];
-			let signedRequest = global.Sfdc.canvas.decode(part);
+			let signedRequest = decode(part);
 			let signedRequestJSON = JSON.parse(signedRequest);
-			console.log(signedRequestJSON);
 			setSr(signedRequestJSON);
 			setRecordId(signedRequestJSON.context.environment.parameters.recordId);
 		});
@@ -125,12 +124,11 @@ function SIDSelector() {
 			compositeRequest: [agreementRequest, agreementSIDRequest, oppySIDRequest],
 		};
 
-		ajaxCallCompositePromise(sr, compositeRequestObj).then((res) => {
-			setPageData(res);
-		});
+		let res = await ajaxCallCompositePromise(sr, compositeRequestObj);
+		setPageData(res);
 	};
 
-	const saveLinksHandler = () => {
+	const saveLinksHandler = async () => {
 		setLoading(true);
 
 		///services/data/vXX.X/composite/sobjects
@@ -192,10 +190,9 @@ function SIDSelector() {
 			compositeRequest: reqArray,
 		};
 
-		ajaxCallCompositePromise(sr, compositeRequestObject).then((res) => {
-			setDefaultState();
-			LoadComponentData();
-		});
+		await ajaxCallCompositePromise(sr, compositeRequestObject);
+		setDefaultState();
+		LoadComponentData();
 	};
 
 	const navToSID = (accountSIDId) => {
@@ -208,7 +205,6 @@ function SIDSelector() {
 
 	const setPageData = (res) => {
 		let data = res.compositeResponse;
-
 		let agreementData = data[0].body;
 		let agreementSIDData = data[1].body.records;
 		let oppySidData = data[2].body.records[0].Opp_SID_SKUs__r.records;

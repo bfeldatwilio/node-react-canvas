@@ -1,0 +1,326 @@
+{
+	"seq": 18,
+	"parentVersion": "54.0",
+	"clientVersion": "41.0",
+	"payload": {
+		"compositeResponse": [
+			{
+				"body": {
+					"attributes": {
+						"type": "Apttus__APTS_Agreement__c",
+						"url": "/services/data/v54.0/sobjects/Apttus__APTS_Agreement__c/a3I7400000000epEAA"
+					},
+					"Id": "a3I7400000000epEAA",
+					"Related_Opportunity_APTS__c": "006740000029DGgAAM",
+					"Primary_Account_SID__c": null,
+					"Flex_Account_SID__c": null,
+					"Additional_Account_SIDs__c": null,
+					"Currency_OF_Generate__c": "USD",
+					"Twilio_Signing_Entity_OF_Generate__c": "Twilio Inc.",
+					"Payment_Type__c": "SendGrid Only",
+					"Name": "Grubhub Holdings Inc_Order Form 2021-09-22",
+					"Account_Legal_Name__c": "Grubhub Seamless"
+				},
+				"httpHeaders": {},
+				"httpStatusCode": 200,
+				"referenceId": "agreement"
+			},
+			{
+				"body": {
+					"totalSize": 0,
+					"done": true,
+					"records": []
+				},
+				"httpHeaders": {},
+				"httpStatusCode": 200,
+				"referenceId": "sid"
+			},
+			{
+				"body": {
+					"totalSize": 1,
+					"done": true,
+					"records": [
+						{
+							"attributes": {
+								"type": "Opportunity",
+								"url": "/services/data/v54.0/sobjects/Opportunity/006740000029DGgAAM"
+							},
+							"Id": "006740000029DGgAAM",
+							"Name": "Grubhub Holdings Inc. - Email: Email Infrastructure",
+							"Opp_SID_SKUs__r": {
+								"totalSize": 8,
+								"done": true,
+								"records": [
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GmhhAAC"
+										},
+										"Id": "a7d74000000GmhhAAC",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000004T3xAAE"
+											},
+											"Id": "a1i740000004T3xAAE",
+											"Name": "AC1e511d89dc62a87b4cd22b5a1781a464",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": -0.17,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": "2021-05-25",
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065rv1AAA"
+												},
+												"Id": "001740000065rv1AAA"
+											},
+											"SID_Entity__c": "Twilio. Inc",
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GnF4AAK"
+										},
+										"Id": "a7d74000000GnF4AAK",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i7400000050zPAAQ"
+											},
+											"Id": "a1i7400000050zPAAQ",
+											"Name": "AC1456d89dc62a87b4cd221234781a464",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 15,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": "2021-12-14",
+											"Account_SID_Created_Date__c": "2021-11-01",
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065ruzAAA"
+												},
+												"Id": "001740000065ruzAAA"
+											},
+											"SID_Entity__c": null,
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GnEuAAK"
+										},
+										"Id": "a7d74000000GnEuAAK",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000005RcpAAE"
+											},
+											"Id": "a1i740000005RcpAAE",
+											"Name": "AC1e512389dc62a87b4cd22b5a1123464",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 0,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": "2022-02-25",
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065ruzAAA"
+												},
+												"Id": "001740000065ruzAAA"
+											},
+											"SID_Entity__c": null,
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000Gmi1AAC"
+										},
+										"Id": "a7d74000000Gmi1AAC",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000004T4qAAE"
+											},
+											"Id": "a1i740000004T4qAAE",
+											"Name": "AC350d26282a2c954c70a968ecd051b573",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 0,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": "2021-09-15",
+											"Account_SID_Status__c": "TRIAL",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065rv1AAA"
+												},
+												"Id": "001740000065rv1AAA"
+											},
+											"SID_Entity__c": "Twilio. Inc",
+											"Customer_currency__c": "YEN"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GnEzAAK"
+										},
+										"Id": "a7d74000000GnEzAAK",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000005RckAAE"
+											},
+											"Id": "a1i740000005RckAAE",
+											"Name": "AC34567d89dc62a87b4cd2245677891a464",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 0,
+											"New_Business_Opportunity__c": "00674000002B4hqAAC",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": "2022-02-23",
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065rv1AAA"
+												},
+												"Id": "001740000065rv1AAA"
+											},
+											"SID_Entity__c": null,
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GmhrAAC"
+										},
+										"Id": "a7d74000000GmhrAAC",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000004T4MAAU"
+											},
+											"Id": "a1i740000004T4MAAU",
+											"Name": "AC2091aca097661f6738faee8c56dd8207",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 4.86,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": "2020-04-02",
+											"Account_SID_Status__c": "SUSPENDED",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065rv1AAA"
+												},
+												"Id": "001740000065rv1AAA"
+											},
+											"SID_Entity__c": "Twilio. Inc",
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GnEpAAK"
+										},
+										"Id": "a7d74000000GnEpAAK",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000005FOhAAM"
+											},
+											"Id": "a1i740000005FOhAAM",
+											"Name": "AC2091aca012361f6738faee8234dd8207",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 5.33,
+											"New_Business_Opportunity__c": "00674000002B4hqAAC",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": null,
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065rv1AAA"
+												},
+												"Id": "001740000065rv1AAA"
+											},
+											"SID_Entity__c": null,
+											"Customer_currency__c": "USD"
+										}
+									},
+									{
+										"attributes": {
+											"type": "Opp_SID_SKU__c",
+											"url": "/services/data/v54.0/sobjects/Opp_SID_SKU__c/a7d74000000GnFTAA0"
+										},
+										"Id": "a7d74000000GnFTAA0",
+										"Account_SID__r": {
+											"attributes": {
+												"type": "Account_SID__c",
+												"url": "/services/data/v54.0/sobjects/Account_SID__c/a1i740000005SXcAAM"
+											},
+											"Id": "a1i740000005SXcAAM",
+											"Name": "ACGH91aca012361f6738faee8234dd1234",
+											"Software_MRR__c": 0,
+											"Total_MRR__c": 0,
+											"New_Business_Opportunity__c": "006740000029DGgAAM",
+											"Exception_Opportunity__c": null,
+											"NPC_Date_50__c": null,
+											"Account_SID_Created_Date__c": null,
+											"Account_SID_Status__c": "ACTIVE",
+											"Account_SID_Type__c": "Master",
+											"Account__r": {
+												"attributes": {
+													"type": "Account",
+													"url": "/services/data/v54.0/sobjects/Account/001740000065ruzAAA"
+												},
+												"Id": "001740000065ruzAAA"
+											},
+											"SID_Entity__c": null,
+											"Customer_currency__c": "USD"
+										}
+									}
+								]
+							}
+						}
+					]
+				},
+				"httpHeaders": {},
+				"httpStatusCode": 200,
+				"referenceId": "oppySid"
+			}
+		]
+	},
+	"status": 200,
+	"statusText": "OK",
+	"responseHeaders": "cache-control: private\r\ncontent-encoding: gzip\r\ncontent-type: application/json;charset=UTF-8\r\ndate: Fri, 04 Mar 2022 18:30:21 GMT\r\nreferrer-policy: origin-when-cross-origin\r\nsforce-limit-info: api-usage=609/30421000\r\nstrict-transport-security: max-age=63072000; includeSubDomains\r\ntransfer-encoding: chunked\r\nvary: Accept-Encoding\r\nx-robots-tag: none\r\nx-xss-protection: 1; mode=block\r\n",
+	"type": "callback",
+	"targetModule": "Canvas"
+}

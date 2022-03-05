@@ -95,6 +95,11 @@ export default function SIDItem(props) {
 						className="slds-checkbox"
 						onChange={onCheckChange}
 						type="checkbox"
+						aria-label={
+							alreadyLinked
+								? `Unlink ${props.sid.Account_SID__r.Name}`
+								: `Link  ${props.sid.Account_SID__r.Name}`
+						}
 						checked={checked}></input>
 				</div>
 			</td>
@@ -103,9 +108,10 @@ export default function SIDItem(props) {
 					<input
 						onChange={onRadioChanged}
 						type="radio"
-						value={sid.Id}
-						id={sid.Id}
 						checked={radioOn}
+						aria-label={
+							alreadyPrimary ? `` : `Make Primary ${props.sid.Account_SID__r.Name}`
+						}
 						name="primary"></input>
 				</div>
 			</td>
@@ -114,7 +120,7 @@ export default function SIDItem(props) {
 					<a onClick={nav_to_sid}>{sid.Account_SID__r.Name}</a>
 					<span className="highlight">{attribute}</span>
 					<div className="sub_sid_data">
-						{sid.Account_SID__r.SID_Entity__c}
+						{sid.Account_SID__r.SID_Entity__c || "Twilio. Inc"}
 						<span>, type:</span>
 						{sid.Account_SID__r.Account_SID_Type__c}
 						<span>, status:</span>
@@ -125,14 +131,17 @@ export default function SIDItem(props) {
 				</div>
 			</td>
 			<td>
-				<div className={`sub_sid_data ${!currencyMatchesParent() ? "red-text" : ""}`}>
+				<div
+					className={`sub_sid_data right-align ${
+						!currencyMatchesParent() ? "red-text" : ""
+					}`}>
 					<div>
-						<span>SW MMR: </span>
+						<span>Software MMR: </span>
 						{sid.Account_SID__r.Software_MRR__c}{" "}
 						{sid.Account_SID__r.Customer_currency__c}
 					</div>
-					<div className="sub_sid_data">
-						<span>Tot MMR: </span>
+					<div>
+						<span>Total MMR: </span>
 						{sid.Account_SID__r.Total_MRR__c} {sid.Account_SID__r.Customer_currency__c}
 					</div>
 				</div>

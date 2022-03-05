@@ -41,23 +41,31 @@ export default function Header_Options(props) {
 					<button
 						disabled={disableSave}
 						onClick={saveLinks}
+						aria-label="Save Modified Links"
 						className="slds-button slds-button_brand">
 						Save
 					</button>
-					<button onClick={setLinkMode} className="slds-button slds-button_neutral">
+					<button
+						onClick={setLinkMode}
+						aria-label="Cancel Modified Links"
+						className="slds-button slds-button_neutral">
 						Cancel
 					</button>
 				</div>
 			)}
 			{props.inPrimaryMode && (
-				<div id="linkModeFunctions" className="slds-button-group" role="group">
+				<div id="primaryModeFunctions" className="slds-button-group" role="group">
 					<button
 						disabled={disableSave}
 						onClick={savePrimary}
+						aria-label="Save Modified Primary"
 						className="slds-button slds-button_brand">
 						Save
 					</button>
-					<button onClick={setPrimaryMode} className="slds-button slds-button_neutral">
+					<button
+						onClick={setPrimaryMode}
+						aria-label="Cancel Modified Primary"
+						className="slds-button slds-button_neutral">
 						Cancel
 					</button>
 				</div>
@@ -66,18 +74,23 @@ export default function Header_Options(props) {
 				<div id="defaultFunctions" className="slds-button-group" role="group">
 					<button
 						onClick={setLinkMode}
+						aria-label="Link SIDs"
 						className={`slds-button ${
 							props.noSIDs ? "slds-button_brand" : "slds-button_neutral"
 						}`}>
 						Link SIDs
 					</button>
 					<button
+						aria-label="Set Primary"
 						disabled={props.noSIDs}
 						onClick={setPrimaryMode}
 						className="slds-button slds-button_neutral">
 						Set Primary
 					</button>
-					<button disabled={props.noSIDs} className="slds-button slds-button_neutral">
+					<button
+						disabled={props.noSIDs}
+						aria-label="Set Flex"
+						className="slds-button slds-button_neutral">
 						Set Flex
 					</button>
 				</div>

@@ -74,7 +74,6 @@ const ajaxCallCompositePromise = async (sr, body) => {
 		"/services/data/v" +
 		sr.context.environment.version.api +
 		"/composite";
-
 	let promise = await new Promise((resolve, reject) => {
 		global.Sfdc.canvas.client.ajax(compositeUrl, {
 			client: sr.client,
@@ -82,6 +81,7 @@ const ajaxCallCompositePromise = async (sr, body) => {
 			data: JSON.stringify(body),
 			success: function (data) {
 				if (data.status === 200) {
+					console.log(data);
 					resolve(data.payload);
 				} else {
 					console.log("Not 200@!#$%@!#$%!#$%");
@@ -103,6 +103,16 @@ const publishEvent = (sr, payload) => {
 	global.Sfdc.canvas.client.publish(sr.client, payload);
 };
 
+const decode = (data) => {
+	return global.Sfdc.canvas.decode(data);
+};
+
+const resize = (client, heightStr) => {
+	global.Sfdc.canvas.client.resize(client, {
+		height: heightStr + "px",
+	});
+};
+
 const getRefreshSignedRequest = async () => {
 	let promise = await new Promise((resolve, reject) => {
 		global.Sfdc.canvas.client.refreshSignedRequest(function (data) {
@@ -117,6 +127,8 @@ const getRefreshSignedRequest = async () => {
 };
 
 export {
+	resize,
+	decode,
 	ajaxCall,
 	ajaxCallGET,
 	ajaxCallCollectionPromise,

@@ -1,0 +1,47 @@
+{
+	"seq": 14,
+	"parentVersion": "54.0",
+	"clientVersion": "41.0",
+	"payload": {
+		"compositeResponse": [
+			{
+				"body": [
+					{
+						"errorCode": "NOT_FOUND",
+						"message": "The requested resource does not exist"
+					}
+				],
+				"httpHeaders": {},
+				"httpStatusCode": 404,
+				"referenceId": "agreement"
+			},
+			{
+				"body": [
+					{
+						"errorCode": "PROCESSING_HALTED",
+						"message": "Execution halted as previous operation (agreement) was not successful."
+					}
+				],
+				"httpHeaders": {},
+				"httpStatusCode": 400,
+				"referenceId": "sid"
+			},
+			{
+				"body": [
+					{
+						"errorCode": "PROCESSING_HALTED",
+						"message": "Execution halted as previous operation (agreement) was not successful."
+					}
+				],
+				"httpHeaders": {},
+				"httpStatusCode": 400,
+				"referenceId": "oppySid"
+			}
+		]
+	},
+	"status": 200,
+	"statusText": "OK",
+	"responseHeaders": "cache-control: private\r\ncontent-encoding: gzip\r\ncontent-type: application/json;charset=UTF-8\r\ndate: Thu, 03 Mar 2022 01:05:50 GMT\r\nreferrer-policy: origin-when-cross-origin\r\nsforce-limit-info: api-usage=16937/30421000\r\nstrict-transport-security: max-age=63072000; includeSubDomains\r\ntransfer-encoding: chunked\r\nvary: Accept-Encoding\r\nx-robots-tag: none\r\nx-xss-protection: 1; mode=block\r\n",
+	"type": "callback",
+	"targetModule": "Canvas"
+}

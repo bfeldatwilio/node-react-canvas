@@ -20,6 +20,10 @@ td.nostyle {
 	color: slategray;
 }
 
+.sub_sid_data.right-align {
+	text-align: right;
+}
+
 .editArea {
 	/* display: none; */
 	width: 0px;
