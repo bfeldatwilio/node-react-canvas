@@ -2,9 +2,9 @@
 
 This project demonstrates a Salesforce Canvas application. This component is the SID Selector on the Agreement Page. A SF Canvas app is a wrapper around a third party application that is independently hosted, and loaded into SF through it's url (including localhost!). This specific component utilizes an Aura component to house the force:canvas component. The Aura component is passing in the pages record Id for use in the Canvas app.
 
-This repo has three main parts:
-1: nginx server in the server folder
-2: react client application in client folder
+This repo has three main parts:  
+1: nginx server in the server folder  
+2: react client application in client folder  
 3: salesforce Aura component in the force-app folder
 
 This project does not have proper error handling or full unit testing, and is for example only.
@@ -13,7 +13,7 @@ This project does not have proper error handling or full unit testing, and is fo
 
 #### Create a new connected component in salesforce
 
-**From Salesforce Setup**
+**From Salesforce Setup**  
 1: Navigate to the `App Manager` in `Setup` and click `New Connected App`.  
 2: Fill in the required basic info at the top and take note of the `API Name` field, this will be used in your code  
 3: Enable OAuth Settings, enter `http://localhost:3000` for the `Callback URL`, and select the `Full Access` for OAuth Scopes (More expermentation needed here)  
@@ -28,15 +28,15 @@ This project does not have proper error handling or full unit testing, and is fo
 
 #### Starting up Localhost
 
-**From the terminal**
-1: navigate to the project root and start the nginx server `npm run start`
+**From the terminal**  
+1: navigate to the project root and start the nginx server `npm run start`  
 3: `cd client` and start the react app `npm run start`
 
 #### Add Canvas App to SF Page
 
-**From SF Agreement Record Page**
-1: Go into page Edit mode
-2: Add the newly created component to the page
+**From SF Agreement Record Page**  
+1: Go into page Edit mode  
+2: Add the newly created component to the page  
 3: Save, go back, and the view the component on the page, happy hacking!
 
 #### Unit Tests
@@ -45,7 +45,7 @@ This application utilizes React Testing Library and Jest for unit testing. From 
 
 #### Deploying to Heroku
 
-1: Make sure you have your own fork of this repo for easy Heroku deployment
+1: Make sure you have your own fork of this repo for easy Heroku deployment  
 2: Create a new Heroku project, and point the deployment to the git repo. Heroku will automatically recognize the application structure and can deploy it without any customization.  
 3: To see the published application, change all `http://localhost:3000` urls to the secure url of your published heroku site.
 
