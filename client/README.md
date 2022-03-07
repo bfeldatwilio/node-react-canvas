@@ -1,72 +1,68 @@
 # Overview
 
-This project demonstrates a Salesforce Canvas application.
+This project demonstrates a Salesforce Canvas application. This component is the SID Selector on the Agreement Page. A SF Canvas app is a wrapper around a third party application that is independently hosted, and loaded into SF through it's url (including localhost!). This specific component utilizes an Aura component to house the force:canvas component. The Aura component is passing in the pages record Id for use in the Canvas app.
 
-## Available Scripts
+This repo has three main parts:
+1: nginx server in the server folder
+2: react client application in client folder
+3: salesforce Aura component in the force-app folder
 
-In the project directory, you can run:
+This project does not have proper error handling or full unit testing, and is for example only.
 
-### `npm start`
+## Get it running
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### Create a new connected component in salesforce
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**From Salesforce Setup**
+1: Navigate to the `App Manager` in `Setup` and click `New Connected App`.
+2: Fill in the required basic info at the top and take note of the `API Name` field, this will be used in your code
+3: Enable OAuth Settings, enter `http://localhost:3000` for the `Callback URL`, and select the `Full Access` for OAuth Scopes (More expermentation needed here)
+4: Scroll to the bottom and enable `Canvas`. Enter `http://localhost:3000/sign` for the Canvas App URL. Under `Locations`, add `Lightning Component`
+5: Hit `save`
 
-### `npm test`
+#### Create and Deploy the Canvas App
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information. This application uses React Testing Library and Jest
+**From your Deployment tool of choice**
+1: In this repo, under `force-app/main/default`, open `NodeReactCanvasApp.cmp` and make sure the `developerName` attribute matches the API name you used creating the app in SF.  
+2: Deploy the Aura folder to your dev org. In this folder, the interesting files are the `NodeReactCanvasApp.cmp` and the `NodeReactCanvasAppController.js. All other files are default when making a new Aura component. `NodeReactCanvasApp.cmp`
 
-### `npm run build`
+#### Starting up Localhost
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**From the terminal**
+1: navigate to the project root and start the nginx server `npm run start`
+3: `cd client` and start the react app `npm run start`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Add Canvas App to SF Page
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**From SF Agreement Record Page**
+1: Go into page Edit mode
+2: Add the newly created component to the page
+3: Save, go back, and the view the component on the page, happy hacking!
 
-### `npm run eject`
+#### Unit Tests
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This application utilizes React Testing Library and Jest for unit testing. From the Client dir, running `npm run test` will launch the test runner and run the tests.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Deploying to Heroku
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1: Make sure you have your own fork of this repo for easy Heroku deployment
+2: Create a new Heroku project, and point the deployment to the git repo. Heroku will automatically recognize the application structure and can deploy it without any customization.  
+3: To see the published application, change all `http://localhost:3000` urls to the secure url of your published heroku site.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## About the app
 
-## Learn More
+The server is an njinx server with two endpoints. One redirects all requests to the react apps publish folder. The other takes the `post` to the sign endpoint, and redirects to the `/` root.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The `post` request includes a signed request from Salesforce, but since this isn't a server rendered application, we cannot use it to serve our content. Instead this endpoint is used for the `canvas` app to trust our url.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The client is a react application using functional components. The app utilizes the [Salesforce Canvas sdk](https://github.com/forcedotcom/SalesforceCanvasJavascriptSDK). The first thing the app does is request a signed request. Typically you should validate the request based on it's signature and your consumer key, however since this is loaded in the app, this doesn't seem necessary.
 
-### Code Splitting
+The signed request is illustrated in the `sampleCanvasReq.json` file in the Client dir. Contains user info, the OAuth token, relative links for the Salesforce API, and the record Id under `parameters` that we passed in through the Aura app.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Once the app populates the record Id, it performs a composite API request for all of the page data:
+1: Current agreement on the page
+2: Agreement SIDs for the agreement
+3: Opportunity SIDs on the agreements Opportunity
+With this info, the app builds the default UI
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-Copy components to public for slds css: https://github.com/salesforce/design-system-react/blob/master/docs/create-react-app.md
+The app has examples of Composite GET requests, Composite POST, DELETE and PATCH requests, SOQL requests, and hitting APEX classes all using the Salesforce API.

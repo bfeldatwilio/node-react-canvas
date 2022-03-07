@@ -1,0 +1,13 @@
+<aura:component implements="flexipage:availableForAllPageTypes, force:hasRecordId">
+
+    <aura:attribute name="canvasParameters" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <article class="slds-card">
+        <force:canvasApp developerName="node_react_canvas"
+            namespacePrefix=""
+            parameters="{!v.canvasParameters}"
+            onCanvasAppLoad="{!c.onCanvasLoad}"
+            onCanvasSubscribed="{!c.onCanvasSubscribed}"
+            width="100%"/>
+    </article>
+</aura:component>
