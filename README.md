@@ -7,7 +7,7 @@ This repo has three main parts:
 2: react client application in client folder  
 3: salesforce Aura component in the force-app folder
 
-This project does not have proper error handling or full unit testing, and is currently for example only.
+This project does not have proper error handling or full unit testing, and is currently for example only. The FLEX SID isn't functional yet. If someone wants to take a stab at adding it based on this projects architecture, go for it!
 
 ## Get it running
 
@@ -29,7 +29,8 @@ This project does not have proper error handling or full unit testing, and is cu
 #### Starting up Localhost
 
 **From the terminal**  
-1: navigate to the project root and start the nginx server `npm run start`  
+1: from the project root, `npm i` to install all project dependencies  
+2: navigate to the project root and start the nginx server `npm run start`  
 3: `cd client` and start the react app `npm run start`
 
 #### Add Canvas App to SF Page
