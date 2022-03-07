@@ -24,7 +24,7 @@ This project does not have proper error handling or full unit testing, and is cu
 
 **From your Deployment tool of choice**  
 1: In this repo, under `force-app/main/default`, open `NodeReactCanvasApp.cmp` and make sure the `developerName` attribute matches the API name you used creating the app in SF.  
-2: Deploy the Aura folder to your dev org. In this folder, the interesting files are the `NodeReactCanvasApp.cmp` and the `NodeReactCanvasAppController.js. All other files are default when making a new Aura component. `NodeReactCanvasApp.cmp`
+2: Deploy the Aura folder to your dev org. In this folder, the interesting files are the `NodeReactCanvasApp.cmp` and the `NodeReactCanvasAppController.js`. All other files are default when making a new Aura component.
 
 #### Starting up Localhost
 
