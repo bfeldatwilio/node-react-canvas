@@ -48,7 +48,7 @@ This application utilizes React Testing Library and Jest for unit testing. From 
 
 1: Make sure you have your own fork of this repo for easy Heroku deployment  
 2: Create a new Heroku project, and point the deployment to the git repo. Heroku will automatically recognize the application structure and can deploy it without any customization.  
-3: To see the published application, change all `http://localhost:3000` urls to the secure url of your published heroku site.
+3: To see the published application, go to the canvas app settings in SF Setup, and change all `http://localhost:3000` urls to the secure url of your published heroku site.
 
 ## About the app
 
@@ -60,10 +60,10 @@ The client is a react application using functional components. The app utilizes 
 
 The signed request is illustrated in the `sampleCanvasReq.json` file in the Client dir. Contains user info, the OAuth token, relative links for the Salesforce API, and the record Id under `parameters` that we passed in through the Aura app.
 
-Once the app populates the record Id, it performs a composite API request for all of the page data:
-1: Current agreement on the page
-2: Agreement SIDs for the agreement
-3: Opportunity SIDs on the agreements Opportunity
+Once the app populates the record Id, it performs a composite API request for all of the page data:  
+1: Current agreement on the page  
+2: Agreement SIDs for the agreement  
+3: Opportunity SIDs on the agreements Opportunity  
 With this info, the app builds the default UI
 
 The app has examples of Composite GET requests, Composite POST, DELETE and PATCH requests, SOQL requests, and hitting APEX classes all using the Salesforce API.
