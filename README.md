@@ -17,12 +17,12 @@ This project does not have proper error handling or full unit testing, and is cu
 1: Navigate to the `App Manager` in `Setup` and click `New Connected App`.  
 2: Fill in the required basic info at the top and take note of the `API Name` field, this will be used in your code  
 3: Enable OAuth Settings, enter `http://localhost:3000` for the `Callback URL`, and select the `Full Access` for OAuth Scopes (More expermentation needed here)  
-4: Scroll to the bottom and enable `Canvas`. Enter `http://localhost:3000/sign` for the Canvas App URL. Under `Locations`, add `Lightning Component`  
+4: Scroll to the bottom and enable `Canvas`. Enter `http://localhost:3000/sign` for the Canvas App URL. Make sure the access method is `Signed Request(POST)`. Under `Locations`, add `Lightning Component`  
 5: Hit `save`
 
 #### Create and Deploy the Canvas App
 
-**From your Deployment tool of choice**
+**From your Deployment tool of choice**  
 1: In this repo, under `force-app/main/default`, open `NodeReactCanvasApp.cmp` and make sure the `developerName` attribute matches the API name you used creating the app in SF.  
 2: Deploy the Aura folder to your dev org. In this folder, the interesting files are the `NodeReactCanvasApp.cmp` and the `NodeReactCanvasAppController.js. All other files are default when making a new Aura component. `NodeReactCanvasApp.cmp`
 
