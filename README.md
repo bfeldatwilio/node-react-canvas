@@ -54,7 +54,7 @@ This application utilizes React Testing Library and Jest for unit testing. From 
 
 The server is an njinx server with two endpoints. One redirects all requests to the react apps publish folder. The other takes the `post` to the sign endpoint, and redirects to the `/` root.
 
-The `post` request includes a signed request from Salesforce, but since this isn't a server rendered application, we cannot use it to serve our content. Instead this endpoint is used for the `canvas` app to trust our url.
+The `post` request includes a signed request from Salesforce, but since this isn't a server rendered application, we cannot use it to serve our content. We should however validate that the signed request is valid by using the canvas apps consumer secret (TODO).
 
 The client is a react application using functional components. The app utilizes the [Salesforce Canvas sdk](https://github.com/forcedotcom/SalesforceCanvasJavascriptSDK). The first thing the app does is request a signed request. Typically you should validate the request based on it's signature and your consumer key, however since this is loaded in the app, this doesn't seem necessary.
 
