@@ -7,7 +7,7 @@ This repo has three main parts:
 2: react client application in client folder  
 3: salesforce Aura component in the force-app folder
 
-This project does not have proper error handling or full unit testing, and is for example only.
+This project does not have proper error handling or full unit testing, and is currently for example only.
 
 ## Get it running
 
