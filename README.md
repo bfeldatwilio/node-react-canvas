@@ -30,7 +30,7 @@ This project does not have proper error handling or full unit testing, and is cu
 
 **From the terminal**  
 1: from the project root, `npm i` to install all project dependencies  
-2: navigate to the project root and start the nginx server `npm run start`  
+2: from the project root and start the nginx server `npm run start`  
 3: `cd client` and start the react app `npm run start`
 
 #### Add Canvas App to SF Page
