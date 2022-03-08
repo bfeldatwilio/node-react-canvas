@@ -11,6 +11,12 @@ This project does not have proper error handling or full unit testing, and is cu
 
 ## Get it running
 
+#### Prerequisites
+
+1: Salesforce Dev Sandbox  
+2: NodeJS installed
+3: NPM installed
+
 #### Create a new connected component in salesforce
 
 **From Salesforce Setup**  
