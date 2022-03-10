@@ -98,6 +98,12 @@ ul > li {
 	grid-area: main;
 }
 
+.rainbow-text {
+	background-image: linear-gradient(to left, red, purple, blue);
+	background-clip: text;
+	color: transparent;
+}
+
 @media (max-width: 900px) {
 	ul > li {
 		grid-template-areas:
