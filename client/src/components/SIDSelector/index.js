@@ -277,7 +277,7 @@ function SIDSelector() {
 							<svg className="slds-icon" aria-hidden="true">
 								<use href="/assets/icons/standard-sprite/svg/symbols.svg#topic"></use>
 							</svg>
-							<span className="slds-assistive-text">agreement SIDs</span>
+							<span className="slds-assistive-text">SIDs</span>
 						</span>
 					</div>
 					<div className="slds-media__body">
@@ -286,7 +286,7 @@ function SIDSelector() {
 								href="#"
 								className="slds-card__header-link slds-truncate"
 								title="Accounts">
-								<span>Agreement SIDs ({agreementSIDs.length})</span>
+								<span>SIDs ({agreementSIDs.length})</span>
 							</a>
 						</h2>
 					</div>
