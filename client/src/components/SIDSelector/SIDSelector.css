@@ -1,3 +1,16 @@
+.header {
+	position: fixed;
+	z-index: 2;
+	background: white;
+	width: 100%;
+	padding-bottom: 10px;
+	top: 0;
+}
+
+.body {
+	margin-top: 75px;
+}
+
 .loader {
 	background: rgba(255, 255, 255, 0.75);
 	position: absolute;
@@ -11,17 +24,8 @@
 	opacity: 0.8;
 }
 
-td.nostyle {
-	margin: 0;
-	padding: 0;
-}
-
 .sub_sid_data span {
 	color: slategray;
-}
-
-.sub_sid_data.right-align {
-	text-align: right;
 }
 
 .editArea {
@@ -37,23 +41,6 @@ td.nostyle {
 	opacity: 1;
 }
 
-.header {
-	position: fixed;
-	z-index: 2;
-	background: white;
-	width: 100%;
-	padding-bottom: 10px;
-	top: 0;
-}
-
-.body {
-	margin-top: 75px;
-}
-
-td > div {
-	padding: 3px 0;
-}
-
 .highlight {
 	background: yellow;
 }
@@ -66,22 +53,11 @@ td > div {
 	background: #fddde3;
 }
 
-.inputContainer {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	vertical-align: middle;
-}
-
 .centered {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	text-align: left;
-}
-
-.slds-card {
-	max-height: 500px;
 }
 
 .red-text {
@@ -92,4 +68,51 @@ td > div {
 	position: absolute;
 	top: -4px;
 	left: 35px;
+}
+
+ul > li {
+	display: grid;
+	grid-template-areas: "input main swcurrency totcurrency";
+	grid-template-columns: 2em auto 20% 20%;
+	padding: 7px 30px 7px 20px;
+	align-items: center;
+	/* transition: all 0.2s ease-out; */
+	border-bottom: solid 2px aliceblue;
+}
+
+#input {
+	grid-area: input;
+}
+
+#totcurrency {
+	grid-area: totcurrency;
+	text-align: left;
+}
+
+#swcurrency {
+	grid-area: swcurrency;
+	text-align: left;
+}
+
+#main {
+	grid-area: main;
+}
+
+@media (max-width: 900px) {
+	ul > li {
+		grid-template-areas:
+			"input main swcurrency"
+			"input main totcurrency";
+		grid-template-columns: 2em auto 25%;
+	}
+}
+
+@media (max-width: 600px) {
+	ul > li {
+		grid-template-areas:
+			"input main main"
+			"input main main"
+			"input swcurrency totcurrency";
+		grid-template-columns: 2em auto;
+	}
 }

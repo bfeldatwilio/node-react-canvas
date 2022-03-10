@@ -88,64 +88,62 @@ export default function SIDItem(props) {
 	};
 
 	return (
-		<tr className={activeClass}>
-			<td className="nostyle">
+		<li className={activeClass}>
+			<div id="input">
 				<div className={`editArea ${props.inLinkMode ? "show" : ""}`}>
-					<input
-						className="slds-checkbox"
-						onChange={onCheckChange}
-						type="checkbox"
-						aria-label={
-							alreadyLinked
-								? `Unlink ${props.sid.Account_SID__r.Name}`
-								: `Link  ${props.sid.Account_SID__r.Name}`
-						}
-						checked={checked}></input>
+					{props.inLinkMode && (
+						<input
+							className="slds-checkbox"
+							onChange={onCheckChange}
+							type="checkbox"
+							aria-label={
+								alreadyLinked
+									? `Unlink ${props.sid.Account_SID__r.Name}`
+									: `Link  ${props.sid.Account_SID__r.Name}`
+							}
+							checked={checked}></input>
+					)}
 				</div>
-			</td>
-			<td className="nostyle">
 				<div className={`editArea ${props.inPrimaryMode ? "show" : ""}`}>
-					<input
-						onChange={onRadioChanged}
-						type="radio"
-						checked={radioOn}
-						aria-label={
-							alreadyPrimary ? `` : `Make Primary ${props.sid.Account_SID__r.Name}`
-						}
-						name="primary"></input>
+					{props.inPrimaryMode && (
+						<input
+							onChange={onRadioChanged}
+							type="radio"
+							checked={radioOn}
+							aria-label={
+								alreadyPrimary
+									? ``
+									: `Make Primary ${props.sid.Account_SID__r.Name}`
+							}
+							name="primary"></input>
+					)}
 				</div>
-			</td>
-			<td>
-				<div>
-					<a onClick={nav_to_sid}>{sid.Account_SID__r.Name}</a>
-					<span className="highlight">{attribute}</span>
-					<div className="sub_sid_data">
-						{sid.Account_SID__r.SID_Entity__c || "Twilio. Inc"}
-						<span>, type:</span>
-						{sid.Account_SID__r.Account_SID_Type__c}
-						<span>, status:</span>
-						{sid.Account_SID__r.Account_SID_Status__c}
-						<span>, created:</span>
-						{sid.Account_SID__r.Account_SID_Created_Date__c}
-					</div>
+			</div>
+			<div id="main">
+				<a onClick={nav_to_sid}>{sid.Account_SID__r.Name}</a>
+				<span className="highlight">{attribute}</span>
+				<div className="sub_sid_data">
+					{sid.Account_SID__r.SID_Entity__c}
+					<span>, type:</span>
+					{sid.Account_SID__r.Account_SID_Type__c}
+					<span>, status:</span>
+					{sid.Account_SID__r.Account_SID_Status__c}
+					<span>, created:</span>
+					{sid.Account_SID__r.Account_SID_Created_Date__c}
 				</div>
-			</td>
-			<td>
-				<div
-					className={`sub_sid_data right-align ${
-						!currencyMatchesParent() ? "red-text" : ""
-					}`}>
-					<div>
-						<span>Software MMR: </span>
-						{sid.Account_SID__r.Software_MRR__c}{" "}
-						{sid.Account_SID__r.Customer_currency__c}
-					</div>
-					<div>
-						<span>Total MMR: </span>
-						{sid.Account_SID__r.Total_MRR__c} {sid.Account_SID__r.Customer_currency__c}
-					</div>
-				</div>
-			</td>
-		</tr>
+			</div>
+			<div
+				id="swcurrency"
+				className={`sub_sid_data ${!currencyMatchesParent() ? "red-text" : ""}`}>
+				<span>Software MMR: </span>
+				{sid.Account_SID__r.Software_MRR__c} {sid.Account_SID__r.Customer_currency__c}
+			</div>
+			<div
+				id="totcurrency"
+				className={`sub_sid_data ${!currencyMatchesParent() ? "red-text" : ""}`}>
+				<span>Total MMR: </span>
+				{sid.Account_SID__r.Total_MRR__c} {sid.Account_SID__r.Customer_currency__c}
+			</div>
+		</li>
 	);
 }

@@ -305,11 +305,8 @@ function SIDSelector() {
 				{agreementSIDs.length === 0 && sr && !inLinkMode && (
 					<EmptyState loginUrl={sr.context.links.loginUrl} />
 				)}
-				<table
-					className="slds-table slds-no-row-hover slds-table_cell-buffer"
-					role="grid"
-					aria-label="SIDs on Agreement Table">
-					<tbody>
+				{(agreementSIDs.length > 0 || inLinkMode) && (
+					<ul role="grid" aria-label="SIDs on Agreement Table">
 						{agreementSIDs.map((sid) => (
 							<SIDItem
 								key={sid.Id}
@@ -334,8 +331,8 @@ function SIDSelector() {
 									onAssociationChange={associationHandler}
 									onDisassociationChange={disassociationHandler}></SIDItem>
 							))}
-					</tbody>
-				</table>
+					</ul>
+				)}
 			</div>
 		</article>
 	);

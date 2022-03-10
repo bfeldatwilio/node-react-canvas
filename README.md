@@ -36,7 +36,7 @@ This project does not have proper error handling or full unit testing, and is cu
 
 **From the terminal**  
 1: from the project root, `npm i`, then start the nginx server `npm run start`  
-2: `cd client` and `npm i`, then start the react app `npm run start`
+2: from a new terminal, client run `npm i`, then start the react app `npm run start`
 
 #### Add Canvas App to SF Page
 
@@ -70,5 +70,7 @@ Once the app populates the record Id, it performs a composite API request for al
 2: Agreement SIDs for the agreement  
 3: Opportunity SIDs on the agreements Opportunity  
 With this info, the app builds the default UI
+
+The UI is responsive and can be placed in any location on the agreement page.
 
 The app has examples of Composite GET requests, Composite POST, DELETE and PATCH requests, SOQL requests, and hitting APEX classes all using the Salesforce API.
