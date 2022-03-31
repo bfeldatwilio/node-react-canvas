@@ -36,7 +36,7 @@ This project does not have proper error handling or full unit testing, and is cu
 
 **From the terminal**  
 1: from the project root, `npm i`, then start the nginx server `npm run start`  
-2: from a new terminal, client run `npm i`, then start the react app `npm run start`
+2: from a new terminal, `cd client` and run `npm i`, then start the react app `npm run start`
 
 #### Add Canvas App to SF Page
 
