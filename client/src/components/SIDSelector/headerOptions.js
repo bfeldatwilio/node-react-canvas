@@ -5,6 +5,7 @@ props:
 	inLinkMode, boolean value if parent is in SID linking mode
     setInLinkMode, function to toggle the inLinkMode boolean
     inPrimaryMode, boolean value if the parent is in SID Primary selection mode
+	inFlexMode, boolean value if the parent is in the SID Flex selection mode
     setInPrimaryMode, function to toggle the inPrimary boolean and show the primary form
     onSaveLinks, function when save button on Links view is pressed
     onSavePrimary, function when save button on Primary view is pressed
@@ -24,6 +25,11 @@ export default function Header_Options(props) {
 		setDisableSave(true);
 	};
 
+	const saveFlex = () => {
+		props.onSaveFlex();
+		setDisableSave(true);
+	};
+
 	const setLinkMode = () => {
 		props.setInLinkMode(!props.inLinkMode);
 		setDisableSave(false);
@@ -31,6 +37,11 @@ export default function Header_Options(props) {
 
 	const setPrimaryMode = () => {
 		props.setInPrimaryMode(!props.inPrimaryMode);
+		setDisableSave(false);
+	};
+
+	const setFlexMode = () => {
+		props.setInFlexMode(!props.inFlexMode);
 		setDisableSave(false);
 	};
 
@@ -43,7 +54,7 @@ export default function Header_Options(props) {
 						onClick={saveLinks}
 						aria-label="Save Modified Links"
 						className="slds-button slds-button_brand">
-						Save
+						Save Links
 					</button>
 					<button
 						onClick={setLinkMode}
@@ -60,7 +71,7 @@ export default function Header_Options(props) {
 						onClick={savePrimary}
 						aria-label="Save Modified Primary"
 						className="slds-button slds-button_brand">
-						Save
+						Save Primary
 					</button>
 					<button
 						onClick={setPrimaryMode}
@@ -70,7 +81,24 @@ export default function Header_Options(props) {
 					</button>
 				</div>
 			)}
-			{!props.inLinkMode && !props.inPrimaryMode && (
+			{props.inFlexMode && (
+				<div id="flexModeFunctions" className="slds-button-group" role="group">
+					<button
+						disabled={disableSave}
+						onClick={saveFlex}
+						aria-label="Save Modified Flex"
+						className="slds-button slds-button_brand">
+						Save Flex
+					</button>
+					<button
+						onClick={setFlexMode}
+						aria-label="Cancel Modified Flex"
+						className="slds-button slds-button_neutral">
+						Cancel
+					</button>
+				</div>
+			)}
+			{!props.inLinkMode && !props.inPrimaryMode && !props.inFlexMode && (
 				<div id="defaultFunctions" className="slds-button-group" role="group">
 					<button
 						onClick={setLinkMode}
@@ -90,6 +118,7 @@ export default function Header_Options(props) {
 					<button
 						disabled={props.noSIDs}
 						aria-label="Set Flex"
+						onClick={setFlexMode}
 						className="slds-button slds-button_neutral">
 						Set Flex
 					</button>

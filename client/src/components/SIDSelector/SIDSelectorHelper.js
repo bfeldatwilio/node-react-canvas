@@ -59,6 +59,7 @@ const opportunitySIDSKUSOQL = () => {
 		Account_SID__r.Account_SID_Type__c,
 		Account_SID__r.Account__r.Id,
 		Account_SID__r.sid_Entity__c,
+		Account_SID__r.Flex_Account__c,
 		Account_SID__r.Customer_currency__c
 		FROM Opp_SID_SKUs__r
 		WHERE IsDeleted = false) 
@@ -85,6 +86,7 @@ const agreementSidSOQL = () => {
 	Account_SID__r.Account_SID_Type__c,
 	Account_SID__r.Account__r.Id,
 	Account_SID__r.sid_Entity__c,
+	Account_SID__r.Flex_Account__c,
 	Account_SID__r.Customer_currency__c
 	FROM Agreement_SID__c
 	WHERE Agreement__r.Related_Opportunity_APTS__c = '@{agreement.Related_Opportunity_APTS__c}'

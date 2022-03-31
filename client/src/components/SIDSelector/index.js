@@ -30,7 +30,9 @@ function SIDSelector() {
 	const [opportunitySIDs, setOpportunitySIDs] = useState([]);
 	const [inLinkMode, setInLinkMode] = useState(false);
 	const [inPrimaryMode, setInPrimaryMode] = useState(false);
+	const [inFlexMode, setInFlexMode] = useState(false);
 	const [newPrimarySID, setNewPrimarySID] = useState();
+	const [newFlexSID, setNewFlexSID] = useState();
 	const [showOpps, setShowOpps] = useState(false);
 
 	// TODO rename these to SIDsToAssociate, SIDsToDisassociate
@@ -42,6 +44,7 @@ function SIDSelector() {
 		setShowOpps(false);
 		setInLinkMode(false);
 		setInPrimaryMode(false);
+		setInFlexMode(false);
 	};
 
 	useEffect(() => {
@@ -240,6 +243,10 @@ function SIDSelector() {
 		setNewPrimarySID(agreementSID);
 	};
 
+	const flexChangeHandler = (agreementSID) => {
+		setNewFlexSID(agreementSID);
+	};
+
 	const savePrimaryHandler = () => {
 		setLoading(true);
 		let SIDName = newPrimarySID.Account_SID__r.Name;
@@ -248,6 +255,23 @@ function SIDSelector() {
 			.join();
 		let patchAgreementBody = {
 			Primary_Account_SID__c: SIDName,
+			Additional_Account_SIDs__c: updatedAdditionalSIDs,
+		};
+
+		ajaxCall(sr, "PATCH", agreement.attributes.url, patchAgreementBody).then((data) => {
+			setDefaultState();
+			LoadComponentData();
+		});
+	};
+
+	const saveFlexHandler = () => {
+		setLoading(true);
+		let SIDName = newFlexSID.Account_SID__r.Name;
+		let updatedAdditionalSIDs = agreement.Additional_Account_SIDs__c.split(",")
+			.filter((s) => s !== SIDName)
+			.join();
+		let patchAgreementBody = {
+			Flex_Account_SID__c: SIDName,
 			Additional_Account_SIDs__c: updatedAdditionalSIDs,
 		};
 
@@ -295,8 +319,11 @@ function SIDSelector() {
 						setInLinkMode={setInLinkMode}
 						inPrimaryMode={inPrimaryMode}
 						setInPrimaryMode={setInPrimaryMode}
+						inFlexMode={inFlexMode}
+						setInFlexMode={setInFlexMode}
 						onSaveLinks={saveLinksHandler}
 						onSavePrimary={savePrimaryHandler}
+						onSaveFlex={saveFlexHandler}
 						noSIDs={agreementSIDs.length === 0}
 					/>
 				</header>
@@ -316,9 +343,12 @@ function SIDSelector() {
 								onAssociationChange={associationHandler}
 								onDisassociationChange={disassociationHandler}
 								onPrimaryChange={primaryChangeHandler}
+								onFlexChange={flexChangeHandler}
 								newPrimarySID={newPrimarySID}
+								newFlexSID={newFlexSID}
 								agreementCurrency={agreement.Currency_OF_Generate__c}
-								inPrimaryMode={inPrimaryMode}></SIDItem>
+								inPrimaryMode={inPrimaryMode}
+								inFlexMode={inFlexMode}></SIDItem>
 						))}
 						{showOpps &&
 							opportunitySIDs.map((sid) => (

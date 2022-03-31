@@ -70,7 +70,14 @@
 	left: 35px;
 }
 
+.flex-item {
+	color: red;
+	font-weight: bolder;
+	font-style: italic;
+}
+
 ul > li {
+	position: relative;
 	display: grid;
 	grid-template-areas: "input main swcurrency totcurrency";
 	grid-template-columns: 2em auto 20% 20%;
@@ -78,6 +85,15 @@ ul > li {
 	align-items: center;
 	/* transition: all 0.2s ease-out; */
 	border-bottom: solid 2px aliceblue;
+}
+
+ul > li.disabled-overlay::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.75);
+	z-index: 1;
 }
 
 #input {

@@ -11,17 +11,21 @@ props:
 	onAssociationChange: handler for opportunity SIDs
 	onPrimaryChange: function to call when the radio has changed
 	newPrimarySID: the currently selected primary SID
+	onFlexChange: function to call when the radio has changed
+	newFlexSID: the currently selected primary SID
 	*/
 
 export default function SIDItem(props) {
 	const sid = props.sid;
 	const alreadyLinked = sid.attributes.type === "Agreement_SID__c";
 	const alreadyPrimary = alreadyLinked ? sid.Is_Primary_Account_SID__c : false;
-	const attribute = alreadyPrimary ? " Primary" : sid.Is_Flex_Account_SID__c ? " Flex" : "";
+	const alreadyFlex = alreadyLinked ? sid.Is_Flex_Account_SID__c : false;
+	const attribute = alreadyPrimary ? " Primary" : alreadyFlex ? " Flex" : "";
 	const stateClasses = {
 		AGREEMENTSIDREMOVED: "red_bg",
 		OPPYSIDADDED: "green_bg",
 		NOTHING: "",
+		DISABLED: "disabled-overlay",
 	};
 
 	const [toBeRemoved, setToBeRemoved] = useState(false);
@@ -31,16 +35,17 @@ export default function SIDItem(props) {
 	const [activeClass, setActiveClass] = useState(stateClasses.NOTHING);
 
 	const setDefaultState = () => {
+		if (props.inPrimaryMode) setRadioOn(alreadyPrimary);
+		if (props.inFlexMode) setRadioOn(alreadyFlex);
 		setToBeAdded(false);
 		setToBeRemoved(false);
 		setChecked(alreadyLinked);
-		setRadioOn(alreadyPrimary);
 		setActiveClass(stateClasses.NOTHING);
 	};
 
 	useEffect(() => {
 		setDefaultState();
-	}, [props.inLinkMode, props.inPrimaryMode]);
+	}, [props.inLinkMode, props.inPrimaryMode, props.inFlexMode]);
 
 	useEffect(() => {
 		setActiveClass(toBeAdded ? stateClasses.OPPYSIDADDED : stateClasses.NOTHING);
@@ -53,11 +58,26 @@ export default function SIDItem(props) {
 	}, [toBeRemoved]);
 
 	useEffect(() => {
+		setActiveClass(
+			props.inFlexMode && !sid.Account_SID__r.Flex_Account__c
+				? stateClasses.DISABLED
+				: stateClasses.NOTHING
+		);
+	}, [props.inFlexMode]);
+
+	useEffect(() => {
 		if (props.newPrimarySID) {
 			let imSelected = props.newPrimarySID.Id === sid.Id;
 			setRadioOn(imSelected);
 		}
 	}, [props.newPrimarySID]);
+
+	useEffect(() => {
+		if (props.newFlexSID) {
+			let imSelected = props.newFlexSID.Id === sid.Id;
+			setRadioOn(imSelected);
+		}
+	}, [props.newFlexSID]);
 
 	const onCheckChange = (e) => {
 		let isChecked = e.currentTarget.checked;
@@ -72,7 +92,8 @@ export default function SIDItem(props) {
 
 	const onRadioChanged = () => {
 		setRadioOn(!radioOn);
-		props.onPrimaryChange(sid);
+		if (props.inPrimaryMode) props.onPrimaryChange(sid);
+		else if (props.inFlexMode) props.onFlexChange(sid);
 	};
 
 	const nav_to_sid = (e) => {
@@ -104,8 +125,9 @@ export default function SIDItem(props) {
 							checked={checked}></input>
 					)}
 				</div>
-				<div className={`editArea ${props.inPrimaryMode ? "show" : ""}`}>
-					{props.inPrimaryMode && (
+				<div
+					className={`editArea ${props.inPrimaryMode || props.inFlexMode ? "show" : ""}`}>
+					{(props.inPrimaryMode || props.inFlexMode) && (
 						<input
 							onChange={onRadioChanged}
 							type="radio"
@@ -121,6 +143,7 @@ export default function SIDItem(props) {
 			</div>
 			<div id="main">
 				<a onClick={nav_to_sid}>{sid.Account_SID__r.Name}</a>
+				<span className="flex-item">{sid.Account_SID__r.Flex_Account__c ? " F" : ""}</span>
 				<span className="highlight">{attribute}</span>
 				<div className="sub_sid_data">
 					{sid.Account_SID__r.SID_Entity__c}
