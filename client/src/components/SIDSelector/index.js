@@ -86,6 +86,7 @@ function SIDSelector() {
 			let signedRequest = decode(part);
 			let signedRequestJSON = JSON.parse(signedRequest);
 			setSr(signedRequestJSON);
+			console.log(signedRequest);
 			setRecordId(signedRequestJSON.context.environment.parameters.recordId);
 		});
 	};

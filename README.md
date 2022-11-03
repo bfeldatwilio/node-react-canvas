@@ -25,6 +25,9 @@ This project does not have proper error handling or full unit testing, and is cu
 3: Enable OAuth Settings, enter `http://localhost:3000` for the `Callback URL`, and select the `Full Access` for OAuth Scopes (More expermentation needed here)  
 4: Scroll to the bottom and enable `Canvas`. Enter `http://localhost:3000/sign` for the Canvas App URL. Make sure the access method is `Signed Request(POST)`. Under `Locations`, add `Lightning Component`  
 5: Hit `save`
+6: Click back into the "View" of the connected app and click Manage
+7: Under OAuth Policies, "Admin approved users are pre-authorized" is selected
+8: Under Profiles, add the profiles that can use the connected app
 
 #### Create and Deploy the Canvas App
 
@@ -57,7 +60,7 @@ This application utilizes React Testing Library and Jest for unit testing. From 
 
 ## About the app
 
-The server is an njinx server with two endpoints. One redirects all requests to the react apps publish folder. The other takes the `post` to the sign endpoint, and redirects to the `/` root.
+The server is an njinx server with two endpoints. One redirects all requests to the react apps build folder. The other takes the `post` to the sign endpoint, and redirects to the `/` root.
 
 The `post` request includes a signed request from Salesforce, but since this isn't a server rendered application, we cannot use it to serve our content. We should however validate that the signed request is valid by using the canvas apps consumer secret (TODO).
 

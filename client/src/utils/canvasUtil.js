@@ -116,6 +116,8 @@ const resize = (client, heightStr) => {
 const getRefreshSignedRequest = async () => {
 	let promise = await new Promise((resolve, reject) => {
 		global.Sfdc.canvas.client.refreshSignedRequest(function (data) {
+			console.log("In the fresh request");
+			console.log(data);
 			if (data.status === 200) {
 				resolve(data);
 			} else {
